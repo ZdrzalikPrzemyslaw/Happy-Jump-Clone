@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.SurfaceView;
 
 public class GameView extends SurfaceView implements Runnable {
+    private Background background;
     private static long start = 0, diff, wait;
 
     private void capFrameRate(long fps) throws InterruptedException {
@@ -54,6 +55,12 @@ public class GameView extends SurfaceView implements Runnable {
 
     public GameView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        background = new Background(w, h, getResources());
     }
 
     @Override
