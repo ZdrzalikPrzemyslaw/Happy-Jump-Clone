@@ -6,10 +6,16 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
 
+import tech.szymanskazdrzalik.weather_game.R;
+import tech.szymanskazdrzalik.weather_game.game.GameEntities;
+import tech.szymanskazdrzalik.weather_game.game.PlayerEntity;
+import tech.szymanskazdrzalik.weather_game.game.TexturedGameEntity;
+
 public class GameView extends SurfaceView implements Runnable {
     private Background background;
     private static long start = 0, diff, wait;
     private Paint paint;
+    private GameEntities gameEntities;
 
     private void capFrameRate(long fps) throws InterruptedException {
         GameView.wait = 1000 / fps;
@@ -27,14 +33,20 @@ public class GameView extends SurfaceView implements Runnable {
 
     }
 
-    private void draw() {
+    private void drawEntity(TexturedGameEntity texturedGameEntity, Canvas canvas) {
+        canvas.drawBitmap(texturedGameEntity.getTexture(), texturedGameEntity.getXPos(), texturedGameEntity.getYPos(), this.paint);
+    }
 
+    private void draw() {
         if (getHolder().getSurface().isValid()) {
             Canvas canvas = getHolder().lockCanvas();
-            canvas.drawBitmap(this.background.getTexture(), this.background.getXPos(), this.background.getYPos(), this.paint);
+            this.drawEntity(this.background, canvas);
+            for (TexturedGameEntity e : this.gameEntities.getEntities()) {
+                this.drawEntity(e, canvas);
+            }
+            this.drawEntity(gameEntities.getPlayerEntity(), canvas);
             getHolder().unlockCanvasAndPost(canvas);
         }
-
     }
 
     /**
@@ -52,6 +64,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void init() {
         this.paint = new Paint();
+        // TODO: 09.01.2021
     }
 
     public GameView(Context context) {
@@ -78,6 +91,8 @@ public class GameView extends SurfaceView implements Runnable {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         background = new Background(w, h, getResources());
+        // TODO: 09.01.2021 Change, testing
+        this.gameEntities = new GameEntities(new PlayerEntity(w/2, h/2, 300, 300, getResources(), R.drawable.santa_idle));
     }
 
     @Override
