@@ -4,7 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 
-public class PlayerEntity extends TexturedGameEntity{
+public class PlayerEntity extends CharacterEntity {
 
     public PlayerEntity(Point location, int textureWidth, int textureHeight, Bitmap background) {
         super(location, textureWidth, textureHeight, background);

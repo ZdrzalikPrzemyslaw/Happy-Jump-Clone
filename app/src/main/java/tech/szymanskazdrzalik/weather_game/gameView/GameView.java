@@ -33,6 +33,16 @@ public class GameView extends SurfaceView implements Runnable {
 
     }
 
+    private void drawBackground(Canvas canvas) {
+        this.drawEntity(this.background, canvas);
+    }
+
+    private void drawNonCharacterEntites(Canvas canvas) {
+        for (TexturedGameEntity e : this.gameEntities.getCharacterEntities()) {
+            this.drawEntity(e, canvas);
+        }
+    }
+
     private void drawEntity(TexturedGameEntity texturedGameEntity, Canvas canvas) {
         canvas.drawBitmap(texturedGameEntity.getTexture(), texturedGameEntity.getXPos(), texturedGameEntity.getYPos(), this.paint);
     }
@@ -40,10 +50,8 @@ public class GameView extends SurfaceView implements Runnable {
     private void draw() {
         if (getHolder().getSurface().isValid()) {
             Canvas canvas = getHolder().lockCanvas();
-            this.drawEntity(this.background, canvas);
-            for (TexturedGameEntity e : this.gameEntities.getEntities()) {
-                this.drawEntity(e, canvas);
-            }
+            this.drawBackground(canvas);
+            this.drawNonCharacterEntites(canvas);
             this.drawEntity(gameEntities.getPlayerEntity(), canvas);
             getHolder().unlockCanvasAndPost(canvas);
         }

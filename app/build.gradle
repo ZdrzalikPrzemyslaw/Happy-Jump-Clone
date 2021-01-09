@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion "29.0.3"
 
     buildFeatures {
@@ -13,8 +13,8 @@ android {
 
     defaultConfig {
         applicationId "tech.szymanskazdrzalik.weather_game"
-        minSdkVersion 23
-        targetSdkVersion 29
+        minSdkVersion 27
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
