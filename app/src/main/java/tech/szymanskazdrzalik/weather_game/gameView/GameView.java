@@ -5,6 +5,16 @@ import android.util.AttributeSet;
 import android.view.SurfaceView;
 
 public class GameView extends SurfaceView implements Runnable {
+    private static long start = 0, diff, wait;
+
+    private void capFrameRate(long fps) throws InterruptedException {
+        GameView.wait = 1000 / fps;
+        GameView.diff = System.currentTimeMillis() - start;
+        if (diff < wait) {
+            Thread.sleep(wait - diff);
+        }
+        start = System.currentTimeMillis();
+    }
 
     private Thread thread;
     private boolean isPlaying;
@@ -17,8 +27,17 @@ public class GameView extends SurfaceView implements Runnable {
 
     }
 
-    private void sleep() {
+    /**
+     * Caps the programs framerate to the specified amount.
+     * @param fps
+     */
 
+    private void sleep(long fps) {
+        try {
+            this.capFrameRate(fps);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public GameView(Context context) {
