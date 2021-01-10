@@ -1,12 +1,15 @@
 package tech.szymanskazdrzalik.weather_game.game;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import tech.szymanskazdrzalik.weather_game.game.entities.CharacterEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.GameEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.ObjectEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.PlayerEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.TexturedGameEntity;
 
 // TODO: 09.01.2021 Good name?
 public class GameEntities {
@@ -93,4 +96,19 @@ public class GameEntities {
         return this.objectGameEntities.remove(entity);
     }
 
+    public boolean removeEntities(Iterable<TexturedGameEntity> texturedGameEntities) {
+        boolean correctlyRemovedAll = true;
+        for (TexturedGameEntity t : texturedGameEntities) {
+            if (t instanceof ObjectEntity) {
+                if (!this.removeEntity((ObjectEntity) t)) {
+                    correctlyRemovedAll = false;
+                }
+            } else if (t instanceof CharacterEntity) {
+                if (!this.removeEntity((CharacterEntity) (t))) {
+                    correctlyRemovedAll = false;
+                }
+            }
+        }
+        return correctlyRemovedAll;
+    }
 }

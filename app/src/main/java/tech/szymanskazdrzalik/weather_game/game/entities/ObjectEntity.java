@@ -1,10 +1,12 @@
-package tech.szymanskazdrzalik.weather_game.game;
+package tech.szymanskazdrzalik.weather_game.game.entities;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 
-public class ObjectEntity extends TexturedGameEntity{
+import tech.szymanskazdrzalik.weather_game.game.entities.TexturedGameEntity;
+
+public class ObjectEntity extends TexturedGameEntity {
     public ObjectEntity(Point location, int textureWidth, int textureHeight, Bitmap background) {
         super(location, textureWidth, textureHeight, background);
     }

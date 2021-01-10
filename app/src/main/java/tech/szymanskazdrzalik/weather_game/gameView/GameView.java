@@ -13,8 +13,8 @@ import java.util.List;
 import tech.szymanskazdrzalik.weather_game.GameActivity;
 import tech.szymanskazdrzalik.weather_game.R;
 import tech.szymanskazdrzalik.weather_game.game.GameEntities;
-import tech.szymanskazdrzalik.weather_game.game.PlayerEntity;
-import tech.szymanskazdrzalik.weather_game.game.TexturedGameEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.PlayerEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.TexturedGameEntity;
 import tech.szymanskazdrzalik.weather_game.sensors.OrientationSensorsService;
 
 public class GameView extends SurfaceView implements Runnable {
@@ -35,6 +35,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private OrientationSensorsService orientationSensorsService;
     private Thread thread;
+    private GameActivity.GameOverListener gameOverListener;
 
     public GameView(Context context) {
         super(context);
@@ -72,6 +73,16 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+    private void checkIfEntitiesAreOnScreenYAxis() {
+        List<TexturedGameEntity> texturedGameEntitiesToRemove = new ArrayList<>();
+        for (TexturedGameEntity t : this.gameEntities.getAllEntities()) {
+            if (t.getYPos() > this.background.getTexture().getHeight()) {
+               texturedGameEntitiesToRemove.add(t);
+            }
+        }
+        this.gameEntities.removeEntities(texturedGameEntitiesToRemove);
+    }
+
     private void movePlayer() {
         this.movePlayerXAxis();
         this.movePlayerYAxis();
@@ -95,9 +106,10 @@ public class GameView extends SurfaceView implements Runnable {
     private void update() throws GameOverException {
         this.handleGameEvents();
         this.movePlayer();
-        this.checkIfEntitiesAreOnScreenXAxis();
-        this.gameEntities.getPlayerEntity().changeSpeedAfterGameTick();
         this.checkGameOverConditions();
+        this.checkIfEntitiesAreOnScreenXAxis();
+        this.checkIfEntitiesAreOnScreenYAxis();
+        this.gameEntities.getPlayerEntity().changeSpeedAfterGameTick();
     }
 
     private void drawBackground(Canvas canvas) {
@@ -161,8 +173,6 @@ public class GameView extends SurfaceView implements Runnable {
         this.isPlaying = true;
 
     }
-
-    private GameActivity.GameOverListener gameOverListener;
 
     public void setGameOverListener(GameActivity.GameOverListener gameOverListener) {
         this.gameOverListener = gameOverListener;
