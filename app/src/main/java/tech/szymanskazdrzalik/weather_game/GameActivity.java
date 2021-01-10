@@ -1,5 +1,6 @@
 package tech.szymanskazdrzalik.weather_game;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
 
@@ -12,6 +13,10 @@ import tech.szymanskazdrzalik.weather_game.gameView.GameView;
 public class GameActivity extends AppCompatActivity {
 
     ActivityGameBinding binding;
+
+    public interface GameOverListener{
+        void onGameOver();
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,5 +38,12 @@ public class GameActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         binding.gameView.resume();
+        binding.gameView.setGameOverListener(new GameOverListener() {
+            @Override
+            public void onGameOver() {
+                Intent intent = new Intent(GameActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

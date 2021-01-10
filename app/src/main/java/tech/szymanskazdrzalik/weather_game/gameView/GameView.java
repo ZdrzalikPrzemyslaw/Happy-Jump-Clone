@@ -10,6 +10,7 @@ import android.view.SurfaceView;
 import java.util.ArrayList;
 import java.util.List;
 
+import tech.szymanskazdrzalik.weather_game.GameActivity;
 import tech.szymanskazdrzalik.weather_game.R;
 import tech.szymanskazdrzalik.weather_game.game.GameEntities;
 import tech.szymanskazdrzalik.weather_game.game.PlayerEntity;
@@ -25,7 +26,7 @@ public class GameView extends SurfaceView implements Runnable {
     private final OnTouchListener touchListener = (v, event) -> {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                gameEventList.add(() -> movePlayerYAxis(-10));
+                gameEventList.add(this::setPlayerSpeedBoostEvent);
                 break;
         }
         v.performClick();
@@ -72,6 +73,15 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void movePlayer() {
+        this.movePlayerXAxis();
+        this.movePlayerYAxis();
+    }
+
+    private void movePlayerYAxis() {
+        this.gameEntities.getPlayerEntity().changeYPos(this.gameEntities.getPlayerEntity().getYSpeed());
+    }
+
+    private void movePlayerXAxis() {
         this.gameEntities.getPlayerEntity().changeXPos((int) (this.orientationSensorsService.getRollConvertedIntoPlayerPositionChangeCoeff() * 10));
     }
 
@@ -83,9 +93,10 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() throws GameOverException {
+        this.handleGameEvents();
         this.movePlayer();
         this.checkIfEntitiesAreOnScreenXAxis();
-        this.handleGameEvents();
+        this.gameEntities.getPlayerEntity().changeSpeedAfterGameTick();
         this.checkGameOverConditions();
     }
 
@@ -151,6 +162,12 @@ public class GameView extends SurfaceView implements Runnable {
 
     }
 
+    private GameActivity.GameOverListener gameOverListener;
+
+    public void setGameOverListener(GameActivity.GameOverListener gameOverListener) {
+        this.gameOverListener = gameOverListener;
+    }
+
     @Override
     public void run() {
         while (true) {
@@ -161,6 +178,7 @@ public class GameView extends SurfaceView implements Runnable {
                     this.sleep(60);
                 }
             } catch (GameOverException e) {
+                gameOverListener.onGameOver();
                 e.printStackTrace();
                 break;
             }
@@ -182,8 +200,8 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
-    private void movePlayerYAxis(int delta) {
-        this.gameEntities.getPlayerEntity().changeYPos(delta);
+    private void setPlayerSpeedBoostEvent() {
+        this.gameEntities.getPlayerEntity().setYSpeedAfterBoostEvent();
     }
 
 }

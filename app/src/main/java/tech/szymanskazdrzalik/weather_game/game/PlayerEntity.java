@@ -5,6 +5,19 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 
 public class PlayerEntity extends CharacterEntity {
+    private int ySpeed = 0;
+
+    public void setYSpeedAfterBoostEvent() {
+        this.ySpeed = -15;
+    }
+
+    public int getYSpeed() {
+        return ySpeed;
+    }
+
+    public void changeSpeedAfterGameTick() {
+        this.ySpeed += 1;
+    }
 
     public PlayerEntity(Point location, int textureWidth, int textureHeight, Bitmap background) {
         super(location, textureWidth, textureHeight, background);
