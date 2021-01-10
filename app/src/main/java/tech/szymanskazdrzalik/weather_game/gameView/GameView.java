@@ -15,7 +15,7 @@ import tech.szymanskazdrzalik.weather_game.game.TexturedGameEntity;
 import tech.szymanskazdrzalik.weather_game.sensors.OrientationSensorsService;
 
 public class GameView extends SurfaceView implements Runnable {
-    private final boolean isPlaying = true;
+    private boolean isPlaying = false;
     private Sensor mSensorAccelerometer;
     private Sensor mSensorMagnetometer;
     private Sensor mSensorGyroscope;
@@ -47,7 +47,15 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
-
+        System.out.println("CHANGE " + this.orientationSensorsService.getChange());
+        this.gameEntities.getPlayerEntity().changeXPos((int)(this.orientationSensorsService.getChange() * 10));
+        for (TexturedGameEntity t : this.gameEntities.getAllEntities()) {
+            if (t.getXPos() + t.getTexture().getWidth() < 0) {
+                t.changeXPos(this.background.getTexture().getWidth() + t.getTexture().getWidth());
+            } else if (t.getXPos() > this.background.getTexture().getWidth()) {
+                t.changeXPos(-this.background.getTexture().getWidth() - t.getTexture().getWidth());
+            }
+        }
     }
 
     private void drawBackground(Canvas canvas) {
@@ -112,14 +120,18 @@ public class GameView extends SurfaceView implements Runnable {
         background = new Background(w, h, getResources());
         // TODO: 09.01.2021 Change, testing
         this.gameEntities = new GameEntities(new PlayerEntity(w / 2, h / 2, 300, 300, getResources(), R.drawable.santa_idle));
+        System.out.println("XD");
+        this.isPlaying = true;
     }
 
     @Override
     public void run() {
-        while (this.isPlaying) {
-            this.update();
-            this.draw();
-            this.sleep(60);
+        while (true) {
+            while (this.isPlaying) {
+                this.update();
+                this.draw();
+                this.sleep(60);
+            }
         }
     }
 

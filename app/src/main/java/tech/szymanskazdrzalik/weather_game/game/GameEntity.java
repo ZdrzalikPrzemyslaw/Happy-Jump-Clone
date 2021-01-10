@@ -25,6 +25,14 @@ public abstract class GameEntity {
         this.position.set(x, y);
     }
 
+    public void changeXPos(int delta) {
+        this.position.x = this.position.x + delta;
+    }
+
+    public void changeYPos(int delta) {
+        this.position.y = this.position.y + delta;
+    }
+
     public void setPosition(Point position) {
         this.position.set(position.x, position.y);
     }

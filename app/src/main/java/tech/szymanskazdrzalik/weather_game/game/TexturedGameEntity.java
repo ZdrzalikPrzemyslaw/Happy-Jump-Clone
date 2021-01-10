@@ -7,6 +7,7 @@ import android.graphics.Point;
 
 public class TexturedGameEntity extends GameEntity {
 
+
     private Bitmap texture;
 
     public Bitmap getTexture() {
@@ -17,13 +18,13 @@ public class TexturedGameEntity extends GameEntity {
         this.texture = texture;
     }
 
-    public TexturedGameEntity(Point location, int textureWidth, int textureHeight, Bitmap background) {
+    public TexturedGameEntity(Point location, int textureWidth, int textureHeight, Bitmap bitmap) {
         super(location);
-        this.texture = Bitmap.createScaledBitmap(background, textureWidth, textureHeight, false);
+        this.texture = Bitmap.createScaledBitmap(bitmap, textureWidth, textureHeight, false);
     }
 
-    public TexturedGameEntity(int xPos, int yPos, int textureWidth, int textureHeight, Bitmap background) {
-        this(new Point(xPos, yPos), textureWidth, textureHeight, background);
+    public TexturedGameEntity(int xPos, int yPos, int textureWidth, int textureHeight, Bitmap bitmap) {
+        this(new Point(xPos, yPos), textureWidth, textureHeight, bitmap);
     }
 
     public TexturedGameEntity(Point location, int textureWidth, int textureHeight, Resources resources, int id) {

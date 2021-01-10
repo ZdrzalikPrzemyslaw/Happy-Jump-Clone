@@ -1,9 +1,12 @@
 package tech.szymanskazdrzalik.weather_game.game;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 // TODO: 09.01.2021 Good name?
 public class GameEntities {
@@ -66,6 +69,14 @@ public class GameEntities {
 
     public List<ObjectEntity> getObjectGameEntities() {
         return Collections.unmodifiableList(this.objectGameEntities);
+    }
+
+    public List<TexturedGameEntity> getAllEntities() {
+        List<TexturedGameEntity> texturedGameEntities = new ArrayList<>();
+        texturedGameEntities.addAll(this.characterGameEntities);
+        texturedGameEntities.addAll(this.objectGameEntities);
+        texturedGameEntities.add(this.playerEntity);
+        return texturedGameEntities;
     }
 
     /**
