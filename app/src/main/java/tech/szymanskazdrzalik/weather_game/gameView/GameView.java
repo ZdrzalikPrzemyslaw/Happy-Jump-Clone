@@ -13,18 +13,9 @@ import tech.szymanskazdrzalik.weather_game.game.TexturedGameEntity;
 
 public class GameView extends SurfaceView implements Runnable {
     private Background background;
-    private static long start = 0, diff, wait;
     private Paint paint;
     private GameEntities gameEntities;
 
-    private void capFrameRate(long fps) throws InterruptedException {
-        GameView.wait = 1000 / fps;
-        GameView.diff = System.currentTimeMillis() - start;
-        if (diff < wait) {
-            Thread.sleep(wait - diff);
-        }
-        start = System.currentTimeMillis();
-    }
 
     private Thread thread;
     private boolean isPlaying = true;
@@ -37,8 +28,14 @@ public class GameView extends SurfaceView implements Runnable {
         this.drawEntity(this.background, canvas);
     }
 
-    private void drawNonCharacterEntites(Canvas canvas) {
+    private void drawCharacterEntities(Canvas canvas) {
         for (TexturedGameEntity e : this.gameEntities.getCharacterEntities()) {
+            this.drawEntity(e, canvas);
+        }
+    }
+
+    private void drawObjectEnetities(Canvas canvas) {
+        for (TexturedGameEntity e : this.gameEntities.getObjectGameEntities()) {
             this.drawEntity(e, canvas);
         }
     }
@@ -51,7 +48,8 @@ public class GameView extends SurfaceView implements Runnable {
         if (getHolder().getSurface().isValid()) {
             Canvas canvas = getHolder().lockCanvas();
             this.drawBackground(canvas);
-            this.drawNonCharacterEntites(canvas);
+            this.drawObjectEnetities(canvas);
+            this.drawCharacterEntities(canvas);
             this.drawEntity(gameEntities.getPlayerEntity(), canvas);
             getHolder().unlockCanvasAndPost(canvas);
         }
@@ -64,7 +62,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void sleep(long fps) {
         try {
-            this.capFrameRate(fps);
+            FrameRate.capFrameRate(fps);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -105,13 +103,11 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public void run() {
-
         while (this.isPlaying) {
             this.update();
             this.draw();
             this.sleep(60);
         }
-
     }
 
     public void resume() {
