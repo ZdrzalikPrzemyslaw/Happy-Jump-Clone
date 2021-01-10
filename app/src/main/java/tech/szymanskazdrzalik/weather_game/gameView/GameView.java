@@ -4,7 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
+import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import tech.szymanskazdrzalik.weather_game.R;
 import tech.szymanskazdrzalik.weather_game.game.GameEntities;
@@ -13,10 +18,21 @@ import tech.szymanskazdrzalik.weather_game.game.TexturedGameEntity;
 import tech.szymanskazdrzalik.weather_game.sensors.OrientationSensorsService;
 
 public class GameView extends SurfaceView implements Runnable {
+    private final List<GameEvent> gameEventList = new ArrayList<>();
     private boolean isPlaying = false;
     private Background background;
     private Paint paint;
     private GameEntities gameEntities;
+    private final OnTouchListener touchListener = (v, event) -> {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                gameEventList.add(() -> movePlayerYAxis(-10));
+                break;
+        }
+        v.performClick();
+        return true;
+    };
+
     private OrientationSensorsService orientationSensorsService;
     private Thread thread;
 
@@ -41,7 +57,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void checkGameOverConditions() throws GameOverException {
-        if (this.gameEntities.getPlayerEntity().getYPos() < (this.background.getTexture().getHeight() + 10)) {
+        if (this.gameEntities.getPlayerEntity().getYPos() > (this.background.getTexture().getHeight() + 10)) {
             throw new GameOverException("Game Over");
         }
     }
@@ -60,9 +76,17 @@ public class GameView extends SurfaceView implements Runnable {
         this.gameEntities.getPlayerEntity().changeXPos((int) (this.orientationSensorsService.getRollConvertedIntoPlayerPositionChangeCoeff() * 10));
     }
 
+    private void handleGameEvents() {
+        for (GameEvent e : this.gameEventList) {
+            e.event();
+        }
+        gameEventList.clear();
+    }
+
     private void update() throws GameOverException {
         this.movePlayer();
         this.checkIfEntitiesAreOnScreenXAxis();
+        this.handleGameEvents();
         this.checkGameOverConditions();
     }
 
@@ -114,6 +138,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void init() {
         this.paint = new Paint();
         this.orientationSensorsService = new OrientationSensorsService(getContext());
+        this.setOnTouchListener(touchListener);
         // TODO: 09.01.2021
     }
 
@@ -124,15 +149,18 @@ public class GameView extends SurfaceView implements Runnable {
         // TODO: 09.01.2021 Change, testing
         this.gameEntities = new GameEntities(new PlayerEntity(w / 2, h / 2, 300, 300, getResources(), R.drawable.santa_idle));
         this.isPlaying = true;
+
     }
 
     @Override
     public void run() {
         while (true) {
             try {
-                this.update();
-                this.draw();
-                this.sleep(60);
+                if (isPlaying) {
+                    this.update();
+                    this.draw();
+                    this.sleep(60);
+                }
             } catch (GameOverException e) {
                 e.printStackTrace();
                 break;
@@ -153,7 +181,14 @@ public class GameView extends SurfaceView implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
 
+    private void movePlayerYAxis(int delta) {
+        this.gameEntities.getPlayerEntity().changeYPos(delta);
+    }
+
+    private interface GameEvent {
+        void event();
     }
 
     private class GameOverException extends Exception {

@@ -6,8 +6,6 @@ import android.graphics.Point;
 
 public class CharacterEntity extends TexturedGameEntity {
 
-
-
     public CharacterEntity(Point location, int textureWidth, int textureHeight, Bitmap background) {
         super(location, textureWidth, textureHeight, background);
     }
