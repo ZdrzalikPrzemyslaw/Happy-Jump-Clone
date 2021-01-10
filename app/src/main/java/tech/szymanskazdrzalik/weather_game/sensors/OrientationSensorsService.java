@@ -7,14 +7,79 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 
-public class OrientationSensorsService implements SensorEventListener {
+public class OrientationSensorsService {
 
     private final Context context;
     private float[] mAccelerometerData = new float[3];
     private float[] mGyroscopeData = new float[3];
     private float[] mMagnetometerData = new float[3];
-    private OnOrientationEventListener onOrientationEventListener;
     private float roll;
+
+    public SensorEventListener getGyroscopeSensorEventListener() {
+        return gyroscopeSensorEventListener;
+    }
+
+    public SensorEventListener getAccelerometerSensorEventListener() {
+        return accelerometerSensorEventListener;
+    }
+
+    public SensorEventListener getMagnetometerSensorEventListener() {
+        return magnetometerSensorEventListener;
+    }
+
+    private abstract class CustomSensorEventListener implements SensorEventListener {
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    }
+
+    private SensorEventListener gyroscopeSensorEventListener = new CustomSensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            int sensorType = event.sensor.getType();
+            if (sensorType == Sensor.TYPE_GYROSCOPE) {
+                OrientationSensorsService.this.mGyroscopeData = event.values;
+            }
+        }
+    };
+
+    private SensorEventListener accelerometerSensorEventListener = new CustomSensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            int sensorType = event.sensor.getType();
+            if (sensorType == Sensor.TYPE_ACCELEROMETER) {
+                OrientationSensorsService.this.mAccelerometerData = event.values.clone();
+            }
+        }
+    };
+
+    private SensorEventListener magnetometerSensorEventListener = new CustomSensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            int sensorType = event.sensor.getType();
+            if (sensorType == Sensor.TYPE_MAGNETIC_FIELD) {
+                mMagnetometerData = event.values.clone();
+                new Thread(new MakeMove()).start();
+            }
+        }
+    };
+
+    public void registerListeners() {
+        SensorManager sensorManager =  (SensorManager) this.context.getSystemService(Context.SENSOR_SERVICE);
+        assert sensorManager != null;
+        sensorManager.registerListener(this.getAccelerometerSensorEventListener(), sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this.getMagnetometerSensorEventListener(), sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this.getGyroscopeSensorEventListener(), sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    public void unregisterListeners() {
+        SensorManager sensorManager =  (SensorManager) this.context.getSystemService(Context.SENSOR_SERVICE);
+        assert sensorManager != null;
+        sensorManager.unregisterListener(this.getAccelerometerSensorEventListener());
+        sensorManager.unregisterListener(this.getMagnetometerSensorEventListener());
+        sensorManager.unregisterListener(this.getGyroscopeSensorEventListener());
+    }
 
     /**
      * Class constructor.
@@ -23,10 +88,6 @@ public class OrientationSensorsService implements SensorEventListener {
      */
     public OrientationSensorsService(Context context) {
         this.context = context;
-    }
-
-    public void setOnOrientationEventListener(OnOrientationEventListener onOrientationEventListener) {
-        this.onOrientationEventListener = onOrientationEventListener;
     }
 
     /**
@@ -44,7 +105,7 @@ public class OrientationSensorsService implements SensorEventListener {
         return orientationValues;
     }
 
-    public float getChange() {
+    public float getRollConvertedIntoPlayerPositionChangeCoeff() {
         if ((roll < (Math.PI / 2)) && (roll > (-Math.PI / 2))) {
             return roll;
         }
@@ -54,47 +115,12 @@ public class OrientationSensorsService implements SensorEventListener {
         return (float) (roll - Math.PI);
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        int sensorType = event.sensor.getType();
-        switch (sensorType) {
-            case Sensor.TYPE_GYROSCOPE:
-                this.mGyroscopeData = event.values;
-                break;
-            case Sensor.TYPE_ACCELEROMETER:
-                this.mAccelerometerData = event.values.clone();
-//                new Thread(new MakeMove()).start();
-                break;
-            case Sensor.TYPE_MAGNETIC_FIELD:
-                mMagnetometerData = event.values.clone();
-                new Thread(new MakeMove()).start();
-                break;
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
-
-
-    public interface OnOrientationEventListener {
-        void onOrientationChangeEvent();
-    }
-
     private class MakeMove implements Runnable {
-
         @Override
         public void run() {
             float[] orientationValues = getOrientationValues();
 
             OrientationSensorsService.this.roll = orientationValues[2];
-            System.out.println("roll " + roll);
-
         }
-
-
     }
-
-
 }

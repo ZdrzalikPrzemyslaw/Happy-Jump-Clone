@@ -47,8 +47,8 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
-        System.out.println("CHANGE " + this.orientationSensorsService.getChange());
-        this.gameEntities.getPlayerEntity().changeXPos((int)(this.orientationSensorsService.getChange() * 10));
+        System.out.println("CHANGE " + this.orientationSensorsService.getRollConvertedIntoPlayerPositionChangeCoeff());
+        this.gameEntities.getPlayerEntity().changeXPos((int) (this.orientationSensorsService.getRollConvertedIntoPlayerPositionChangeCoeff() * 10));
         for (TexturedGameEntity t : this.gameEntities.getAllEntities()) {
             if (t.getXPos() + t.getTexture().getWidth() < 0) {
                 t.changeXPos(this.background.getTexture().getWidth() + t.getTexture().getWidth());
@@ -106,11 +106,6 @@ public class GameView extends SurfaceView implements Runnable {
     private void init() {
         this.paint = new Paint();
         this.orientationSensorsService = new OrientationSensorsService(getContext());
-        this.mSensorManager = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
-        assert mSensorManager != null;
-        this.mSensorAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        this.mSensorGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        this.mSensorMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         // TODO: 09.01.2021
     }
 
@@ -120,7 +115,6 @@ public class GameView extends SurfaceView implements Runnable {
         background = new Background(w, h, getResources());
         // TODO: 09.01.2021 Change, testing
         this.gameEntities = new GameEntities(new PlayerEntity(w / 2, h / 2, 300, 300, getResources(), R.drawable.santa_idle));
-        System.out.println("XD");
         this.isPlaying = true;
     }
 
@@ -136,18 +130,14 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void resume() {
-        if (this.orientationSensorsService != null) {
-            this.mSensorManager.registerListener(this.orientationSensorsService, this.mSensorAccelerometer, SensorManager.SENSOR_DELAY_GAME);
-            this.mSensorManager.registerListener(this.orientationSensorsService, this.mSensorMagnetometer, SensorManager.SENSOR_DELAY_GAME);
-            this.mSensorManager.registerListener(this.orientationSensorsService, this.mSensorGyroscope, SensorManager.SENSOR_DELAY_GAME);
-        }
+        this.orientationSensorsService.registerListeners();
         thread = new Thread(this);
         thread.start();
     }
 
     public void pause() {
         try {
-            mSensorManager.unregisterListener(this.orientationSensorsService);
+            this.orientationSensorsService.unregisterListeners();
             thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
