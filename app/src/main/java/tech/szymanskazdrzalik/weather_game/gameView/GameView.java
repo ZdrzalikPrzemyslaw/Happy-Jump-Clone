@@ -3,8 +3,6 @@ package tech.szymanskazdrzalik.weather_game.gameView;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
 
@@ -42,9 +40,13 @@ public class GameView extends SurfaceView implements Runnable {
         this.init();
     }
 
-    private void update() {
-        System.out.println("CHANGE " + this.orientationSensorsService.getRollConvertedIntoPlayerPositionChangeCoeff());
-        this.gameEntities.getPlayerEntity().changeXPos((int) (this.orientationSensorsService.getRollConvertedIntoPlayerPositionChangeCoeff() * 10));
+    private void checkGameOverConditions() throws GameOverException {
+        if (this.gameEntities.getPlayerEntity().getYPos() < (this.background.getTexture().getHeight() + 10)) {
+            throw new GameOverException("Game Over");
+        }
+    }
+
+    private void checkIfEntitiesAreOnScreenXAxis() {
         for (TexturedGameEntity t : this.gameEntities.getAllEntities()) {
             if (t.getXPos() + t.getTexture().getWidth() < 0) {
                 t.changeXPos(this.background.getTexture().getWidth() + t.getTexture().getWidth());
@@ -52,6 +54,16 @@ public class GameView extends SurfaceView implements Runnable {
                 t.changeXPos(-this.background.getTexture().getWidth() - t.getTexture().getWidth());
             }
         }
+    }
+
+    private void movePlayer() {
+        this.gameEntities.getPlayerEntity().changeXPos((int) (this.orientationSensorsService.getRollConvertedIntoPlayerPositionChangeCoeff() * 10));
+    }
+
+    private void update() throws GameOverException {
+        this.movePlayer();
+        this.checkIfEntitiesAreOnScreenXAxis();
+        this.checkGameOverConditions();
     }
 
     private void drawBackground(Canvas canvas) {
@@ -117,10 +129,13 @@ public class GameView extends SurfaceView implements Runnable {
     @Override
     public void run() {
         while (true) {
-            while (this.isPlaying) {
+            try {
                 this.update();
                 this.draw();
                 this.sleep(60);
+            } catch (GameOverException e) {
+                e.printStackTrace();
+                break;
             }
         }
     }
@@ -139,5 +154,26 @@ public class GameView extends SurfaceView implements Runnable {
             e.printStackTrace();
         }
 
+    }
+
+    private class GameOverException extends Exception {
+        public GameOverException() {
+        }
+
+        public GameOverException(String message) {
+            super(message);
+        }
+
+        public GameOverException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public GameOverException(Throwable cause) {
+            super(cause);
+        }
+
+        public GameOverException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+            super(message, cause, enableSuppression, writableStackTrace);
+        }
     }
 }
