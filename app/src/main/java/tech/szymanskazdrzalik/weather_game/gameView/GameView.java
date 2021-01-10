@@ -16,13 +16,9 @@ import tech.szymanskazdrzalik.weather_game.sensors.OrientationSensorsService;
 
 public class GameView extends SurfaceView implements Runnable {
     private boolean isPlaying = false;
-    private Sensor mSensorAccelerometer;
-    private Sensor mSensorMagnetometer;
-    private Sensor mSensorGyroscope;
     private Background background;
     private Paint paint;
     private GameEntities gameEntities;
-    private SensorManager mSensorManager;
     private OrientationSensorsService orientationSensorsService;
     private Thread thread;
 
