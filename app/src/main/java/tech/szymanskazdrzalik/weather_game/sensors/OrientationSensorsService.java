@@ -15,17 +15,6 @@ public class OrientationSensorsService {
     private float[] mMagnetometerData = new float[3];
     private float roll;
 
-    public SensorEventListener getGyroscopeSensorEventListener() {
-        return gyroscopeSensorEventListener;
-    }
-
-    public SensorEventListener getAccelerometerSensorEventListener() {
-        return accelerometerSensorEventListener;
-    }
-
-    public SensorEventListener getMagnetometerSensorEventListener() {
-        return magnetometerSensorEventListener;
-    }
 
     private abstract class CustomSensorEventListener implements SensorEventListener {
         @Override
@@ -68,17 +57,17 @@ public class OrientationSensorsService {
     public void registerListeners() {
         SensorManager sensorManager =  (SensorManager) this.context.getSystemService(Context.SENSOR_SERVICE);
         assert sensorManager != null;
-        sensorManager.registerListener(this.getAccelerometerSensorEventListener(), sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
-        sensorManager.registerListener(this.getMagnetometerSensorEventListener(), sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
-        sensorManager.registerListener(this.getGyroscopeSensorEventListener(), sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this.accelerometerSensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this.magnetometerSensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this.gyroscopeSensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_GAME);
     }
 
     public void unregisterListeners() {
         SensorManager sensorManager =  (SensorManager) this.context.getSystemService(Context.SENSOR_SERVICE);
         assert sensorManager != null;
-        sensorManager.unregisterListener(this.getAccelerometerSensorEventListener());
-        sensorManager.unregisterListener(this.getMagnetometerSensorEventListener());
-        sensorManager.unregisterListener(this.getGyroscopeSensorEventListener());
+        sensorManager.unregisterListener(this.accelerometerSensorEventListener);
+        sensorManager.unregisterListener(this.magnetometerSensorEventListener);
+        sensorManager.unregisterListener(this.gyroscopeSensorEventListener);
     }
 
     /**
