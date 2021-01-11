@@ -56,18 +56,26 @@ public class GameEntities {
         if (e1_x_start < e2_x_start && e1_x_end > e2_x_start) {
             return true;
         }
-        if (e1_x_start > e2_x_start && e1_x_start < e2_x_end) {
+        if (e1_x_start < e2_x_end && e1_x_end > e2_x_end) {
+            return true;
+        }
+        if (e1_x_start > e2_x_start && e1_x_end < e2_x_end) {
             return true;
         }
         return false;
 
     }
 
+    // TODO: 11.01.2021 Poprawić, przy wystarczająco dużej prędkości i wystarczająco cieńskiej teksturze obiekt przeleci przez teksturę
+    //  Myślę żeby zrobić tak ze jeśli obiekt już znajduje się w teksturze w danej chwili to zwrócić false (że jakby odbić się może tylko jak leci z góry)
+    //  I żeby zrobić tak że jeśli po ruchu jakaś część jego tekstury znalazła by się pod początkiem tekstury platformy to true
+
     private boolean checkYCoordinates(PlayerEntity e1, TexturedGameEntity e2) {
         double e1_y_start = e1.getYPos();
         double e1_y_end = e1.getYPos() + e1.getTexture().getHeight();
         double e2_y_start = e2.getYPos();
         double e2_y_end = e2.getYPos() + e2.getTexture().getHeight();
+
 
         if (e1_y_end + e1.getYSpeed() > e2_y_start && e1_y_end + e1.getYSpeed() < e2_y_end) {
             return true;
