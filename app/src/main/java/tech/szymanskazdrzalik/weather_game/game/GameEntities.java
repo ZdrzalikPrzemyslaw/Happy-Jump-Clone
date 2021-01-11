@@ -28,7 +28,6 @@ public class GameEntities {
         this.addObjectEntities(objectGameEntities);
     }
 
-
     private static Optional<GameEntity> getFirstElementFromIterable(Iterable<GameEntity> rhsList) {
         if (rhsList != null) {
             for (GameEntity o : rhsList) {
@@ -36,6 +35,46 @@ public class GameEntities {
             }
         }
         return Optional.empty();
+    }
+
+    public boolean detectCollisionWithObjects(PlayerEntity entityToCheck, Iterable<ObjectEntity> entitiesToColide) {
+        for (ObjectEntity o : entitiesToColide) {
+            // check if x matches
+            if (checkXCoordinates(entityToCheck, o) && checkYCoordinates(entityToCheck, o)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkXCoordinates(PlayerEntity e1, TexturedGameEntity e2) {
+        double e1_x_start = e1.getXPos();
+        double e1_x_end = e1.getXPos() + e1.getTexture().getWidth();
+        double e2_x_start = e2.getXPos();
+        double e2_x_end = e2.getXPos() + e2.getTexture().getWidth();
+
+        if (e1_x_start < e2_x_start && e1_x_end > e2_x_start) {
+            return true;
+        }
+        if (e1_x_start > e2_x_start && e1_x_start < e2_x_end) {
+            return true;
+        }
+        return false;
+
+    }
+
+    private boolean checkYCoordinates(PlayerEntity e1, TexturedGameEntity e2) {
+        double e1_y_start = e1.getYPos();
+        double e1_y_end = e1.getYPos() + e1.getTexture().getHeight();
+        double e2_y_start = e2.getYPos();
+        double e2_y_end = e2.getYPos() + e2.getTexture().getHeight();
+
+        if (e1_y_end + e1.getYSpeed() > e2_y_start && e1_y_end + e1.getYSpeed() < e2_y_end) {
+            return true;
+        }
+        return false;
+
+
     }
 
     public PlayerEntity getPlayerEntity() {

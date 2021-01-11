@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tech.szymanskazdrzalik.weather_game.GameActivity;
-import tech.szymanskazdrzalik.weather_game.R;
 import tech.szymanskazdrzalik.weather_game.game.GameEntities;
+import tech.szymanskazdrzalik.weather_game.game.entities.PlatformEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PlayerEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.TexturedGameEntity;
 import tech.szymanskazdrzalik.weather_game.sensors.OrientationSensorsService;
@@ -103,8 +103,15 @@ public class GameView extends SurfaceView implements Runnable {
         gameEventList.clear();
     }
 
+    private void checkColisions() {
+        if (this.gameEntities.detectCollisionWithObjects(this.gameEntities.getPlayerEntity(), this.gameEntities.getObjectGameEntities())) {
+            this.gameEntities.getPlayerEntity().setYSpeedAfterBoostEvent();
+        }
+    }
+
     private void update() throws GameOverException {
         this.handleGameEvents();
+        this.checkColisions();
         this.movePlayer();
         this.checkGameOverConditions();
         this.checkIfEntitiesAreOnScreenXAxis();
@@ -169,7 +176,9 @@ public class GameView extends SurfaceView implements Runnable {
         super.onSizeChanged(w, h, oldw, oldh);
         background = new Background(w, h, getResources());
         // TODO: 09.01.2021 Change, testing
-        this.gameEntities = new GameEntities(new PlayerEntity(w / 2, h / 2, 300, 300, getResources(), R.drawable.santa_idle));
+        this.gameEntities = new GameEntities(new PlayerEntity(w / 2, h / 2, getResources()));
+        // TODO: 11.01.2021 Ultra krzywe, co jeśli 20 platform nie wypełni ekranu xD
+        this.gameEntities.addEntity(new PlatformEntity(-100, h, getResources(), 20));
         this.isPlaying = true;
 
     }
