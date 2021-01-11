@@ -22,8 +22,8 @@ public class GameView extends SurfaceView implements Runnable {
     private boolean isPlaying = false;
     private Background background;
     private Paint paint;
-    private int score;
-    private int moved = 0;
+    private double score;
+    private double moved = 0;
     private GameActivity.ScoreListener scoreListener;
     private GameEntities gameEntities;
     private final OnTouchListener touchListener = (v, event) -> {
@@ -59,11 +59,11 @@ public class GameView extends SurfaceView implements Runnable {
         this.init();
     }
 
-    public int getScore() {
+    public double getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(double score) {
         this.score = score;
         this.scoreListener.onScoreChange();
     }
@@ -91,7 +91,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void checkIfEntitiesAreOnScreenYAxis() {
         List<TexturedGameEntity> texturedGameEntitiesToRemove = new ArrayList<>();
         for (TexturedGameEntity t : this.gameEntities.getAllEntities()) {
-            if (t.getYPos() > this.background.getTexture().getHeight() + 300) {
+            if (t.getYPos() > this.background.getTexture().getHeight() + 3000) {
                 System.out.println(t + " " + t.getYPos());
                 texturedGameEntitiesToRemove.add(t);
             }
@@ -107,13 +107,17 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void moveAllEntitiesYAxis() throws GameOverException {
         this.gameEntities.getPlayerEntity().changeYPos(this.gameEntities.getPlayerEntity().getYSpeed());
+        StartingPlatformEntity startingPlatformEntity = null;
+        for (TexturedGameEntity e : this.gameEntities.getAllEntities()) {
+            if (e instanceof StartingPlatformEntity) {
+                startingPlatformEntity = (StartingPlatformEntity) e;
+            }
+        }
         double distanceToMiddle = (this.background.getTexture().getHeight() / 2.4f) - this.gameEntities.getPlayerEntity().getYPos();
         if (distanceToMiddle > 0) {
-            this.moved += (int) distanceToMiddle;
+            this.moved += distanceToMiddle;
             if (moved > score)
                 this.setScore(moved);
-            System.out.println(moved + " MOVED");
-            System.out.println(score + " SCORE");
             for (TexturedGameEntity e : this.gameEntities.getAllEntities()) {
                 e.changeYPos(distanceToMiddle);
             }
@@ -121,37 +125,24 @@ public class GameView extends SurfaceView implements Runnable {
         }
         double distanceToBottomQuarter = (this.background.getTexture().getHeight() * 3f / 4f) - this.gameEntities.getPlayerEntity().getYPos();
         if (distanceToBottomQuarter < 0) {
-            StartingPlatformEntity startingPlatformEntity = null;
-            for (TexturedGameEntity e : this.gameEntities.getAllEntities()) {
-                if (e instanceof StartingPlatformEntity) {
-                    startingPlatformEntity = (StartingPlatformEntity) e;
-                }
-            }
             boolean shouldLose = true;
-            for (TexturedGameEntity e : this.gameEntities.getAllEntities()) {
-                if (e.getYPos() > this.gameEntities.getPlayerEntity().getYPos()) {
-                    shouldLose = false;
-                }
-                if (startingPlatformEntity == null) {
-                    e.changeYPos(distanceToBottomQuarter);
-                } else {
-                    if (moved > -distanceToBottomQuarter) {
-                        e.changeYPos(distanceToBottomQuarter);
-                        moved += distanceToBottomQuarter;
-                    } else {
-                        if (e instanceof PlayerEntity) {
-
-                        } else {
-                            e.changeYPos(-moved);
-                            startingPlatformEntity.setPosition(startingPlatformEntity.getXPos(), background.getTexture().getHeight() - startingPlatformEntity.getTexture().getHeight());
-                            moved = 0;
-                        }
+            if (moved > -distanceToBottomQuarter) {
+                for (TexturedGameEntity e : this.gameEntities.getAllEntities()) {
+                    if (e.getYPos() > this.gameEntities.getPlayerEntity().getYPos()) {
+                        shouldLose = false;
                     }
+                    e.changeYPos(distanceToBottomQuarter);
                 }
+                moved += distanceToBottomQuarter;
+            } else if (moved != 0) {
+                for (TexturedGameEntity e : this.gameEntities.getAllEntities()) {
+                    if (e.getYPos() > this.gameEntities.getPlayerEntity().getYPos()) {
+                        shouldLose = false;
+                    }
+                    e.changeYPos(-moved);
+                }
+                moved = 0;
             }
-
-            System.out.println(moved);
-
             if (shouldLose && startingPlatformEntity == null) {
                 throw new GameOverException();
             }

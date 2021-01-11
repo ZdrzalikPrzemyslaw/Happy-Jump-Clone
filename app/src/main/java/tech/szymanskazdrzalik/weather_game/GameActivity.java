@@ -46,6 +46,6 @@ public class GameActivity extends AppCompatActivity {
             Intent intent = new Intent(GameActivity.this, MainActivity.class);
             startActivity(intent);
         });
-        binding.gameView.setScoreListener(() -> runOnUiThread(() -> binding.textViewScore.setText("Score = " + binding.gameView.getScore())));
+        binding.gameView.setScoreListener(() -> runOnUiThread(() -> binding.textViewScore.setText("Score = " + (int) (binding.gameView.getScore()))));
     }
 }
