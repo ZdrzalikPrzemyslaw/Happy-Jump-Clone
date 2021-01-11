@@ -129,7 +129,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void drawEntity(TexturedGameEntity texturedGameEntity, Canvas canvas) {
-        canvas.drawBitmap(texturedGameEntity.getTexture(), texturedGameEntity.getXPos(), texturedGameEntity.getYPos(), this.paint);
+        canvas.drawBitmap(texturedGameEntity.getTexture(), (int) (texturedGameEntity.getXPos()), (int) (texturedGameEntity.getYPos()), this.paint);
     }
 
     private void draw() {

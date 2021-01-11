@@ -3,38 +3,54 @@ package tech.szymanskazdrzalik.weather_game.game.entities;
 import android.graphics.Point;
 
 public abstract class GameEntity {
-    private final Point position;
+    private double x_pos;
+    private double y_pos;
     protected GameEntity(int x, int y) {
-        this.position = new Point();
+        this.setPosition(x, y);
+    }
+
+    protected GameEntity(double x, double y) {
         this.setPosition(x, y);
     }
 
     protected GameEntity (Point point) {
-        this.position = point;
+        this.x_pos = point.x;
+        this.y_pos = point.y;
     }
 
-    public int getXPos() {
-        return position.x;
+    public double getXPos() {
+        return this.x_pos;
     }
 
-    public int getYPos() {
-        return position.y;
+    public double getYPos() {
+        return this.y_pos;
     }
 
     public void setPosition(int x, int y) {
-        this.position.set(x, y);
+        this.x_pos = x;
+        this.y_pos = y;
+    }
+
+    public void setPosition(double x, double y) {
+        this.x_pos = x;
+        this.y_pos = y;
     }
 
     public void changeXPos(int delta) {
-        this.position.x = this.position.x + delta;
+        this.x_pos = this.x_pos + delta;
+    }
+
+    public void changeXPos(double delta) {
+        this.x_pos = this.x_pos + delta;
     }
 
     public void changeYPos(int delta) {
-        this.position.y = this.position.y + delta;
+        this.y_pos = this.y_pos + delta;
     }
 
-    public void setPosition(Point position) {
-        this.position.set(position.x, position.y);
+    public void changeYPos(double delta) {
+        this.y_pos = this.y_pos + delta;
     }
+
 
 }

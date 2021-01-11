@@ -6,8 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
 public class TexturedGameEntity extends GameEntity {
-
-
     private Bitmap texture;
 
     public Bitmap getTexture() {
