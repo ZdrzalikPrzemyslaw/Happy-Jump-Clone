@@ -179,7 +179,7 @@ public class GameView extends SurfaceView implements Runnable {
         resetTickCount();
     }
 
-    private void generateInitialPlatforms(int initialPlatformsCount) {
+    private void generatePlatforms() {
         int highestPlatformY = this.background.getTexture().getHeight();
         for (TexturedGameEntity i : this.gameEntities.getObjectGameEntities()) {
             if (i.getYPos() < highestPlatformY) {
@@ -191,7 +191,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         List<ObjectEntity> objectEntityList = new ArrayList<>();
 
-        for (int i = 0; i < initialPlatformsCount; i++) {
+        while (highestPlatformY < - this.background.getTexture().getHeight()) {
             int newPlatformY = highestPlatformY - 300 - random.nextInt(1);
             int newPlatformX = random.nextInt(this.background.getTexture().getWidth() - 400) + 200;
             objectEntityList.add(new PlatformEntity(newPlatformX, newPlatformY, getResources(), 1));
@@ -214,6 +214,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void callEvery60Ticks() {
         if (tick % 60 == 0 && tick != 0) {
             this.checkIfEntitiesAreOnScreenYAxis();
+            this.generatePlatforms();
         }
     }
 
@@ -290,7 +291,6 @@ public class GameView extends SurfaceView implements Runnable {
         this.gameEntities = new GameEntities(new PlayerEntity(w / 2, h / 2, getResources()));
         // TODO: 11.01.2021 Ultra krzywe, co jeśli 20 platform nie wypełni ekranu xD
         this.gameEntities.addEntity(new StartingPlatformEntity(h, getResources()));
-        this.generateInitialPlatforms(20);
         this.isPlaying = true;
 
     }
