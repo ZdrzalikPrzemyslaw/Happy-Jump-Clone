@@ -93,7 +93,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void movePlayerXAxis() {
-        this.gameEntities.getPlayerEntity().changeXPos((int) (this.orientationSensorsService.getRollConvertedIntoPlayerPositionChangeCoeff() * 20));
+        this.gameEntities.getPlayerEntity().changeXPos((int) (this.orientationSensorsService.getRollConvertedIntoPlayerPositionChangeCoeff() * 35));
     }
 
     private void handleGameEvents() {
