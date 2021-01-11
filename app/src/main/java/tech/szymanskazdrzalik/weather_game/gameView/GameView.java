@@ -9,15 +9,19 @@ import android.view.SurfaceView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import tech.szymanskazdrzalik.weather_game.GameActivity;
 import tech.szymanskazdrzalik.weather_game.game.GameEntities;
+import tech.szymanskazdrzalik.weather_game.game.entities.ObjectEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.PlatformEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PlayerEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.StartingPlatformEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.TexturedGameEntity;
 import tech.szymanskazdrzalik.weather_game.sensors.OrientationSensorsService;
 
 public class GameView extends SurfaceView implements Runnable {
+    private static int tick = 0;
     private final List<GameEvent> gameEventList = new ArrayList<>();
     private boolean isPlaying = false;
     private Background background;
@@ -91,7 +95,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void checkIfEntitiesAreOnScreenYAxis() {
         List<TexturedGameEntity> texturedGameEntitiesToRemove = new ArrayList<>();
         for (TexturedGameEntity t : this.gameEntities.getAllEntities()) {
-            if (t.getYPos() > this.background.getTexture().getHeight() + 3000) {
+            if (t.getYPos() > this.background.getTexture().getHeight() + 300) {
                 System.out.println(t + " " + t.getYPos());
                 texturedGameEntitiesToRemove.add(t);
             }
@@ -161,19 +165,69 @@ public class GameView extends SurfaceView implements Runnable {
         gameEventList.clear();
     }
 
-    private void checkColisions() {
+    private void checkCollisions() {
         if (this.gameEntities.detectCollisionWithObjects(this.gameEntities.getPlayerEntity(), this.gameEntities.getObjectGameEntities())) {
             this.gameEventList.add(() -> GameView.this.gameEntities.getPlayerEntity().setYSpeedAfterBoostEvent());
         }
     }
 
     private void update() throws GameOverException {
+        callEveryTick();
+        callEvery30Ticks();
+        callEvery60Ticks();
+        increaseTickCount();
+        resetTickCount();
+    }
+
+    private void generateInitialPlatforms(int initialPlatformsCount) {
+        int highestPlatformY = this.background.getTexture().getHeight();
+        for (TexturedGameEntity i : this.gameEntities.getObjectGameEntities()) {
+            if (i.getYPos() < highestPlatformY) {
+                highestPlatformY = (int) i.getYPos();
+            }
+        }
+
+        Random random = new Random();
+
+        List<ObjectEntity> objectEntityList = new ArrayList<>();
+
+        for (int i = 0; i < initialPlatformsCount; i++) {
+            int newPlatformY = highestPlatformY - 300 - random.nextInt(1);
+            int newPlatformX = random.nextInt(this.background.getTexture().getWidth() - 400) + 200;
+            objectEntityList.add(new PlatformEntity(newPlatformX, newPlatformY, getResources(), 1));
+            highestPlatformY = newPlatformY;
+        }
+
+        this.gameEntities.addObjectEntities(objectEntityList);
+    }
+
+    private void increaseTickCount() {
+        tick++;
+    }
+
+    private void resetTickCount() {
+        if (tick % 120 == 0 && tick != 0) {
+            tick = 0;
+        }
+    }
+
+    private void callEvery60Ticks() {
+        if (tick % 60 == 0 && tick != 0) {
+            this.checkIfEntitiesAreOnScreenYAxis();
+        }
+    }
+
+    private void callEvery30Ticks() throws GameOverException {
+        if (tick % 30 == 0 && tick != 0) {
+            this.checkGameOverConditions();
+        }
+    }
+
+    private void callEveryTick() throws GameOverException {
         this.handleGameEvents();
-        this.checkColisions();
+        this.checkCollisions();
         this.movePlayer();
-        this.checkGameOverConditions();
         this.checkIfEntitiesAreOnScreenXAxis();
-        this.checkIfEntitiesAreOnScreenYAxis();
     }
 
     private void drawBackground(Canvas canvas) {
@@ -236,6 +290,7 @@ public class GameView extends SurfaceView implements Runnable {
         this.gameEntities = new GameEntities(new PlayerEntity(w / 2, h / 2, getResources()));
         // TODO: 11.01.2021 Ultra krzywe, co jeśli 20 platform nie wypełni ekranu xD
         this.gameEntities.addEntity(new StartingPlatformEntity(h, getResources()));
+        this.generateInitialPlatforms(20);
         this.isPlaying = true;
 
     }

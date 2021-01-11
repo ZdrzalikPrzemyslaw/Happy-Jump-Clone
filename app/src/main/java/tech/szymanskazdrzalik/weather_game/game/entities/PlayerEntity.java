@@ -24,7 +24,7 @@ public class PlayerEntity extends CharacterEntity {
     }
 
     public void setYSpeedAfterBoostEvent() {
-        this.ySpeed = -15;
+        this.ySpeed = -22;
     }
 
     public double getYSpeed() {
