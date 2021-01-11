@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import tech.szymanskazdrzalik.weather_game.game.entities.CharacterEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.GameEntity;
@@ -99,6 +100,16 @@ public class GameEntities {
 
     public List<ObjectEntity> getObjectGameEntities() {
         return Collections.unmodifiableList(this.objectGameEntities);
+    }
+
+    public List<ObjectEntity> getObjectGameEntitiesWithYCoordinatesHigherThanParam(int yCoordinate) {
+        List<ObjectEntity> list = new ArrayList<>();
+        for (ObjectEntity o : this.objectGameEntities) {
+            if (o.getYPos() > yCoordinate) {
+                list.add(o);
+            }
+        }
+        return Collections.unmodifiableList(list);
     }
 
     public List<TexturedGameEntity> getAllEntities() {

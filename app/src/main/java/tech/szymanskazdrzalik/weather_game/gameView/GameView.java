@@ -166,7 +166,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void checkCollisions() {
-        if (this.gameEntities.detectCollisionWithObjects(this.gameEntities.getPlayerEntity(), this.gameEntities.getObjectGameEntities())) {
+        if (this.gameEntities.detectCollisionWithObjects(this.gameEntities.getPlayerEntity(), this.gameEntities.getObjectGameEntitiesWithYCoordinatesHigherThanParam((int) (this.gameEntities.getPlayerEntity().getYPos() + this.gameEntities.getPlayerEntity().getTexture().getHeight()) - 100))) {
             this.gameEventList.add(() -> GameView.this.gameEntities.getPlayerEntity().setYSpeedAfterBoostEvent());
         }
     }
