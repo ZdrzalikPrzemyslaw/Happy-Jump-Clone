@@ -7,6 +7,7 @@ import android.graphics.Point;
 import tech.szymanskazdrzalik.weather_game.game.entities.TexturedGameEntity;
 
 public class ObjectEntity extends TexturedGameEntity {
+
     public ObjectEntity(Point location, int textureWidth, int textureHeight, Bitmap background) {
         super(location, textureWidth, textureHeight, background);
     }
