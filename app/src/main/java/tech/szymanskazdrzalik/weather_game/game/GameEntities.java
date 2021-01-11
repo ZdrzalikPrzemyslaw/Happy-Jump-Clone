@@ -50,7 +50,6 @@ public class GameEntities {
     }
 
     private boolean checkCollision(PlayerEntity e1, TexturedGameEntity e2) {
-
         double e1_x_start = e1.getXPos();
         double e1_y_start = e1.getYPos();
         double e1_x_end = e1.getXPos() + e1.getTexture().getWidth();
@@ -64,7 +63,6 @@ public class GameEntities {
                 e1_x_end > e2_x_start &&
                 e1_y_start < e2_y_end &&
                 e1_y_end > e2_y_start;
-
     }
 
     public PlayerEntity getPlayerEntity() {
