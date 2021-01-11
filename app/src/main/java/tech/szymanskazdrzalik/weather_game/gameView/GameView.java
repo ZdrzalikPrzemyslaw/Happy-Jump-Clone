@@ -12,8 +12,8 @@ import java.util.List;
 
 import tech.szymanskazdrzalik.weather_game.GameActivity;
 import tech.szymanskazdrzalik.weather_game.game.GameEntities;
-import tech.szymanskazdrzalik.weather_game.game.entities.PlatformEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PlayerEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.StartingPlatformEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.TexturedGameEntity;
 import tech.szymanskazdrzalik.weather_game.sensors.OrientationSensorsService;
 
@@ -22,6 +22,9 @@ public class GameView extends SurfaceView implements Runnable {
     private boolean isPlaying = false;
     private Background background;
     private Paint paint;
+    private int score;
+    private int moved = 0;
+    private GameActivity.ScoreListener scoreListener;
     private GameEntities gameEntities;
     private final OnTouchListener touchListener = (v, event) -> {
         switch (event.getAction()) {
@@ -32,7 +35,6 @@ public class GameView extends SurfaceView implements Runnable {
         v.performClick();
         return true;
     };
-
     private OrientationSensorsService orientationSensorsService;
     private Thread thread;
     private GameActivity.GameOverListener gameOverListener;
@@ -57,6 +59,19 @@ public class GameView extends SurfaceView implements Runnable {
         this.init();
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+        this.scoreListener.onScoreChange();
+    }
+
+    public void setScoreListener(GameActivity.ScoreListener scoreListener) {
+        this.scoreListener = scoreListener;
+    }
+
     private void checkGameOverConditions() throws GameOverException {
         if (this.gameEntities.getPlayerEntity().getYPos() > (this.background.getTexture().getHeight() + 10)) {
             throw new GameOverException("Game Over");
@@ -76,20 +91,72 @@ public class GameView extends SurfaceView implements Runnable {
     private void checkIfEntitiesAreOnScreenYAxis() {
         List<TexturedGameEntity> texturedGameEntitiesToRemove = new ArrayList<>();
         for (TexturedGameEntity t : this.gameEntities.getAllEntities()) {
-            if (t.getYPos() > this.background.getTexture().getHeight()) {
-               texturedGameEntitiesToRemove.add(t);
+            if (t.getYPos() > this.background.getTexture().getHeight() + 300) {
+                System.out.println(t + " " + t.getYPos());
+                texturedGameEntitiesToRemove.add(t);
             }
         }
         this.gameEntities.removeEntities(texturedGameEntitiesToRemove);
     }
 
-    private void movePlayer() {
+    private void movePlayer() throws GameOverException {
         this.movePlayerXAxis();
-        this.movePlayerYAxis();
+        this.moveAllEntitiesYAxis();
+        this.gameEntities.getPlayerEntity().changeSpeedAfterGameTick();
     }
 
-    private void movePlayerYAxis() {
+    private void moveAllEntitiesYAxis() throws GameOverException {
         this.gameEntities.getPlayerEntity().changeYPos(this.gameEntities.getPlayerEntity().getYSpeed());
+        double distanceToMiddle = (this.background.getTexture().getHeight() / 2.4f) - this.gameEntities.getPlayerEntity().getYPos();
+        if (distanceToMiddle > 0) {
+            this.moved += (int) distanceToMiddle;
+            if (moved > score)
+                this.setScore(moved);
+            System.out.println(moved + " MOVED");
+            System.out.println(score + " SCORE");
+            for (TexturedGameEntity e : this.gameEntities.getAllEntities()) {
+                e.changeYPos(distanceToMiddle);
+            }
+            return;
+        }
+        double distanceToBottomQuarter = (this.background.getTexture().getHeight() * 3f / 4f) - this.gameEntities.getPlayerEntity().getYPos();
+        if (distanceToBottomQuarter < 0) {
+            StartingPlatformEntity startingPlatformEntity = null;
+            for (TexturedGameEntity e : this.gameEntities.getAllEntities()) {
+                if (e instanceof StartingPlatformEntity) {
+                    startingPlatformEntity = (StartingPlatformEntity) e;
+                }
+            }
+            boolean shouldLose = true;
+            for (TexturedGameEntity e : this.gameEntities.getAllEntities()) {
+                if (e.getYPos() > this.gameEntities.getPlayerEntity().getYPos()) {
+                    shouldLose = false;
+                }
+                if (startingPlatformEntity == null) {
+                    e.changeYPos(distanceToBottomQuarter);
+                } else {
+                    if (moved > -distanceToBottomQuarter) {
+                        e.changeYPos(distanceToBottomQuarter);
+                        moved += distanceToBottomQuarter;
+                    } else {
+                        if (e instanceof PlayerEntity) {
+
+                        } else {
+                            e.changeYPos(-moved);
+                            startingPlatformEntity.setPosition(startingPlatformEntity.getXPos(), background.getTexture().getHeight() - startingPlatformEntity.getTexture().getHeight());
+                            moved = 0;
+                        }
+                    }
+                }
+            }
+
+            System.out.println(moved);
+
+            if (shouldLose && startingPlatformEntity == null) {
+                throw new GameOverException();
+            }
+        }
+
     }
 
     private void movePlayerXAxis() {
@@ -116,7 +183,6 @@ public class GameView extends SurfaceView implements Runnable {
         this.checkGameOverConditions();
         this.checkIfEntitiesAreOnScreenXAxis();
         this.checkIfEntitiesAreOnScreenYAxis();
-        this.gameEntities.getPlayerEntity().changeSpeedAfterGameTick();
     }
 
     private void drawBackground(Canvas canvas) {
@@ -178,7 +244,7 @@ public class GameView extends SurfaceView implements Runnable {
         // TODO: 09.01.2021 Change, testing
         this.gameEntities = new GameEntities(new PlayerEntity(w / 2, h / 2, getResources()));
         // TODO: 11.01.2021 Ultra krzywe, co jeśli 20 platform nie wypełni ekranu xD
-        this.gameEntities.addEntity(new PlatformEntity(-100, h, getResources(), 20));
+        this.gameEntities.addEntity(new StartingPlatformEntity(h, getResources()));
         this.isPlaying = true;
 
     }

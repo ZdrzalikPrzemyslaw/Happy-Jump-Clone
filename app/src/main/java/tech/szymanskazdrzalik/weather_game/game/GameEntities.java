@@ -109,6 +109,13 @@ public class GameEntities {
         return texturedGameEntities;
     }
 
+    public List<TexturedGameEntity> getAllNonPlayerEntities() {
+        List<TexturedGameEntity> texturedGameEntities = new ArrayList<>();
+        texturedGameEntities.addAll(this.characterGameEntities);
+        texturedGameEntities.addAll(this.objectGameEntities);
+        return texturedGameEntities;
+    }
+
     /**
      * @return True if successful, false if failure
      */
