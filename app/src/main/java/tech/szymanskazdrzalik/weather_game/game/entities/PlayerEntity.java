@@ -15,6 +15,10 @@ public class PlayerEntity extends CharacterEntity {
         super(location, defaultTextureWidth, defaultTextureHeight, resources, defaultResource);
     }
 
+    public PlayerEntity(PlayerEntity playerEntity) {
+        super((int) playerEntity.getXPos(), (int) playerEntity.getYPos(), defaultTextureWidth, defaultTextureHeight, playerEntity.getTexture());
+    }
+
     public PlayerEntity(int xPos, int yPos, Resources resources) {
         super(xPos, yPos, defaultTextureWidth, defaultTextureHeight, resources, defaultResource);
     }
