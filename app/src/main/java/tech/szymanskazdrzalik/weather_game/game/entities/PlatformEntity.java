@@ -11,6 +11,7 @@ import tech.szymanskazdrzalik.weather_game.R;
 
 public class PlatformEntity extends ObjectEntity {
 
+    // TODO: 12.01.2021 Zrobić żeby tekstury bazowe ładowały się tylko raz, w singletonie??? czy w statycznym polu żeby nie ładować przy kazdym tworzeniu od nowa
     public PlatformEntity(Point location, Resources resources, int centerPieceCount) {
         super(location, createPlatformBitmap(centerPieceCount, resources).getWidth(), createPlatformBitmap(centerPieceCount, resources).getHeight(), createPlatformBitmap(centerPieceCount, resources));
     }
