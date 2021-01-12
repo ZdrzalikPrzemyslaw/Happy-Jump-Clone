@@ -13,7 +13,7 @@ public class Background extends TexturedGameEntity {
      * Creates a background with the default texture.
      */
     public Background(int textureWidth, int textureHeight, Resources resources) {
-        super(Background.getDefaultPosition(), textureWidth, textureHeight, resources, R.drawable.example_background);
+        super(Background.getDefaultPosition(), textureWidth, textureHeight, resources, R.drawable.bitmapa);
     }
 
     public Background(int textureWidth, int textureHeight, Bitmap background) {

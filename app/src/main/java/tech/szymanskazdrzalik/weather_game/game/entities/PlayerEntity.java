@@ -7,8 +7,8 @@ import tech.szymanskazdrzalik.weather_game.R;
 
 public class PlayerEntity extends CharacterEntity {
     private final static int defaultResource = R.drawable.santa_idle;
-    private final static int defaultTextureWidth = 300;
-    public final static int defaultTextureHeight = 300;
+    private final static int defaultTextureWidth = 421 * 4/ 7;
+    public final static int defaultTextureHeight = 579 * 4/ 7;
     private double ySpeed = 0;
 
     public PlayerEntity(Point location, Resources resources) {
