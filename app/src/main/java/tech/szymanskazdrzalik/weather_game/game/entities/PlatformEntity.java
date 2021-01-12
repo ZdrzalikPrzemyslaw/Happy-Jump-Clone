@@ -23,7 +23,7 @@ public class PlatformEntity extends ObjectEntity {
         super(xPos, yPos - getTextureHeight(), getTextureWidth(centerPieceCount), getTextureHeight(), createPlatformBitmap(centerPieceCount));
     }
 
-    private static int getTextureHeight() {
+    public static int getTextureHeight() {
         if (tileLeft == null) {
             // TODO: 12.01.2021 CUSTOM
             throw new RuntimeException();

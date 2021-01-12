@@ -287,9 +287,9 @@ public class GameView extends SurfaceView implements Runnable {
         super.onSizeChanged(w, h, oldw, oldh);
         background = new Background(w, h, getResources());
         // TODO: 09.01.2021 Change, testing
-        this.gameEntities = new GameEntities(new PlayerEntity(w / 2, (int) (0.8 * h), getResources()));
-        // TODO: 11.01.2021 Ultra krzywe, co jeśli 20 platform nie wypełni ekranu xD
         PlatformEntity.init(getResources());
+        this.gameEntities = new GameEntities(new PlayerEntity(w / 2, (int) (h - PlayerEntity.defaultTextureHeight - PlatformEntity.getTextureHeight() - 50), getResources()));
+        // TODO: 11.01.2021 Ultra krzywe, co jeśli 20 platform nie wypełni ekranu xD
         this.gameEntities.addEntity(new StartingPlatformEntity(h));
         this.generatePlatforms();
         this.isPlaying = true;
