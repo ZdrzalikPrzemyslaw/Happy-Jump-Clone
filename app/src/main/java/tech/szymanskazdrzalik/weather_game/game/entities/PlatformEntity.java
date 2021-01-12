@@ -17,11 +17,18 @@ public class PlatformEntity extends ObjectEntity {
 
     public PlatformEntity(int xPos, int yPos, Resources resources, int centerPieceCount) {
         super(xPos, yPos - getTextureHeight(resources), createPlatformBitmap(centerPieceCount, resources).getWidth(), getTextureHeight(resources), createPlatformBitmap(centerPieceCount, resources));
-        System.out.println("HEJKA " + this.getTexture() +  " " + this.getTexture().getWidth() + " " + this.getTexture().getHeight());
+        System.out.println("HEJKA " + this.getTexture() + " " + this.getTexture().getWidth() + " " + this.getTexture().getHeight());
     }
 
     private static int getTextureHeight(Resources resources) {
         return Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_left)).getHeight();
+    }
+
+    public static int getTextureWidth(Resources resources) {
+        Bitmap tileLeft = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_left));
+        Bitmap tileRight = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_right));
+        Bitmap tileCenter = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_center));
+        return tileLeft.getWidth() + tileCenter.getWidth() + tileRight.getWidth();
     }
 
     private static Bitmap createPlatformBitmap(int centerPieceCount, Resources resources) {
