@@ -193,7 +193,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         while (highestPlatformY > - this.background.getTexture().getHeight()) {
             int newPlatformY = highestPlatformY - 300 - random.nextInt(1);
-            int newPlatformX = random.nextInt(this.background.getTexture().getWidth() - 400);
+            int newPlatformX = random.nextInt(this.background.getTexture().getWidth() - PlatformEntity.getTextureWidth(getResources()));
             objectEntityList.add(new PlatformEntity(newPlatformX, newPlatformY, getResources(), 1));
             highestPlatformY = newPlatformY;
         }
