@@ -22,18 +22,18 @@ import tech.szymanskazdrzalik.weather_game.sensors.OrientationSensorsService;
 
 public class GameView extends SurfaceView implements Runnable {
     private static int tick = 0;
-    private final List<GameEvent> gameEventList = new ArrayList<>();
     private boolean isPlaying = false;
     private Background background;
     private Paint paint;
     private double score;
     private double moved = 0;
+    private GameEvents gameEvents;
     private GameActivity.ScoreListener scoreListener;
     private GameEntities gameEntities;
     private final OnTouchListener touchListener = (v, event) -> {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                gameEventList.add(this::setPlayerSpeedBoostEvent);
+                this.gameEvents.addGameEvent(this::setPlayerSpeedBoostEvent);
                 break;
         }
         v.performClick();
@@ -46,6 +46,7 @@ public class GameView extends SurfaceView implements Runnable {
     public GameView(Context context) {
         super(context);
         this.init();
+        this.gameEvents = new GameEvents();
     }
 
     public GameView(Context context, AttributeSet attrs) {
@@ -159,15 +160,12 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void handleGameEvents() {
-        for (GameEvent e : this.gameEventList) {
-            e.event();
-        }
-        gameEventList.clear();
+        this.gameEvents.runGameEvents();
     }
 
     private void checkCollisions() {
         if (this.gameEntities.detectCollisionWithObjects(this.gameEntities.getPlayerEntity(), this.gameEntities.getObjectGameEntitiesWithYCoordinatesHigherThanParam((int) (this.gameEntities.getPlayerEntity().getYPos() + this.gameEntities.getPlayerEntity().getTexture().getHeight()) - 100))) {
-            this.gameEventList.add(() -> GameView.this.gameEntities.getPlayerEntity().setYSpeedAfterBoostEvent());
+            this.gameEvents.addGameEvent(() -> GameView.this.gameEntities.getPlayerEntity().setYSpeedAfterBoostEvent());
         }
     }
 
@@ -191,10 +189,10 @@ public class GameView extends SurfaceView implements Runnable {
 
         List<ObjectEntity> objectEntityList = new ArrayList<>();
 
-        while (highestPlatformY > - this.background.getTexture().getHeight()) {
+        while (highestPlatformY > -this.background.getTexture().getHeight()) {
             int newPlatformY = highestPlatformY - 300 - random.nextInt(1);
-            int newPlatformX = random.nextInt(this.background.getTexture().getWidth() - PlatformEntity.getTextureWidth(getResources()));
-            objectEntityList.add(new PlatformEntity(newPlatformX, newPlatformY, getResources(), 1));
+            int newPlatformX = random.nextInt(this.background.getTexture().getWidth() - 400);
+            objectEntityList.add(new PlatformEntity(newPlatformX, newPlatformY, 1));
             highestPlatformY = newPlatformY;
         }
 
@@ -279,6 +277,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void init() {
         this.paint = new Paint();
         this.orientationSensorsService = new OrientationSensorsService(getContext());
+        this.gameEvents = new GameEvents();
         this.setOnTouchListener(touchListener);
         // TODO: 09.01.2021
     }
@@ -290,7 +289,8 @@ public class GameView extends SurfaceView implements Runnable {
         // TODO: 09.01.2021 Change, testing
         this.gameEntities = new GameEntities(new PlayerEntity(w / 2, h / 2, getResources()));
         // TODO: 11.01.2021 Ultra krzywe, co jeśli 20 platform nie wypełni ekranu xD
-        this.gameEntities.addEntity(new StartingPlatformEntity(h, getResources()));
+        PlatformEntity.init(getResources());
+        this.gameEntities.addEntity(new StartingPlatformEntity(h));
         this.isPlaying = true;
 
     }

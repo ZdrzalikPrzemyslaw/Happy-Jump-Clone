@@ -12,33 +12,49 @@ import tech.szymanskazdrzalik.weather_game.R;
 public class PlatformEntity extends ObjectEntity {
 
     // TODO: 12.01.2021 Zrobić żeby tekstury bazowe ładowały się tylko raz, w singletonie??? czy w statycznym polu żeby nie ładować przy kazdym tworzeniu od nowa
-    public PlatformEntity(Point location, Resources resources, int centerPieceCount) {
-        super(location, createPlatformBitmap(centerPieceCount, resources).getWidth(), createPlatformBitmap(centerPieceCount, resources).getHeight(), createPlatformBitmap(centerPieceCount, resources));
+    public PlatformEntity(Point location, int centerPieceCount) {
+        super(location, getTextureWidth(centerPieceCount), getTextureHeight(), createPlatformBitmap(centerPieceCount));
     }
 
-    public PlatformEntity(int xPos, int yPos, Resources resources, int centerPieceCount) {
-        super(xPos, yPos - getTextureHeight(resources), createPlatformBitmap(centerPieceCount, resources).getWidth(), getTextureHeight(resources), createPlatformBitmap(centerPieceCount, resources));
-        System.out.println("HEJKA " + this.getTexture() + " " + this.getTexture().getWidth() + " " + this.getTexture().getHeight());
+    public PlatformEntity(int xPos, int yPos, int centerPieceCount) {
+        super(xPos, yPos - getTextureHeight(), getTextureWidth(centerPieceCount), getTextureHeight(), createPlatformBitmap(centerPieceCount));
     }
 
-    private static int getTextureHeight(Resources resources) {
-        return Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_left)).getHeight();
+    private static int getTextureHeight() {
+        if (tileLeft == null) {
+            // TODO: 12.01.2021 CUSTOM
+            throw new RuntimeException();
+        }
+        return tileCenter.getHeight();
     }
 
-    public static int getTextureWidth(Resources resources) {
-        Bitmap tileLeft = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_left));
-        Bitmap tileRight = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_right));
-        Bitmap tileCenter = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_center));
-        return tileLeft.getWidth() + tileCenter.getWidth() + tileRight.getWidth();
+    private static Bitmap tileLeft;
+    private static Bitmap tileCenter;
+    private static Bitmap tileRight;
+
+    public static void init(Resources resources) {
+        tileLeft = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_left));
+        tileRight = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_right));
+        tileCenter = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_center));
     }
 
-    private static Bitmap createPlatformBitmap(int centerPieceCount, Resources resources) {
+    public static int getTextureWidth(int tileCenterCount) {
+        if (tileLeft == null) {
+            // TODO: 12.01.2021 CUSTOM
+            throw new RuntimeException();
+        }
+        return tileLeft.getWidth() + tileCenterCount * tileCenter.getWidth() + tileRight.getWidth();
+    }
+
+    private static Bitmap createPlatformBitmap(int centerPieceCount) {
         if (centerPieceCount < 0) {
             throw new IllegalArgumentException();
         }
-        Bitmap tileLeft = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_left));
-        Bitmap tileRight = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_right));
-        Bitmap tileCenter = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_center));
+
+        if (tileLeft == null) {
+            // TODO: 12.01.2021 CUSTOM
+            throw new RuntimeException();
+        }
 
         Bitmap result = Bitmap.createBitmap(tileLeft.getWidth() + tileRight.getWidth() + tileCenter.getWidth() * centerPieceCount, tileLeft.getHeight(), Bitmap.Config.ARGB_8888);
 
