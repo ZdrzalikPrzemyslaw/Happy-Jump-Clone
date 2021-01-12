@@ -11,11 +11,14 @@ import tech.szymanskazdrzalik.weather_game.R;
 
 public class PlatformEntity extends ObjectEntity {
 
+    private static Bitmap tileLeft;
+    private static Bitmap tileCenter;
+    private static Bitmap tileRight;
+
     // TODO: 12.01.2021 Zrobić żeby tekstury bazowe ładowały się tylko raz, w singletonie??? czy w statycznym polu żeby nie ładować przy kazdym tworzeniu od nowa
     public PlatformEntity(Point location, int centerPieceCount) {
         super(location, getTextureWidth(centerPieceCount), getTextureHeight(), createPlatformBitmap(centerPieceCount));
     }
-
     public PlatformEntity(int xPos, int yPos, int centerPieceCount) {
         super(xPos, yPos - getTextureHeight(), getTextureWidth(centerPieceCount), getTextureHeight(), createPlatformBitmap(centerPieceCount));
     }
@@ -28,14 +31,13 @@ public class PlatformEntity extends ObjectEntity {
         return tileCenter.getHeight();
     }
 
-    private static Bitmap tileLeft;
-    private static Bitmap tileCenter;
-    private static Bitmap tileRight;
-
     public static void init(Resources resources) {
-        tileLeft = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_left));
-        tileRight = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_right));
-        tileCenter = Bitmap.createBitmap(BitmapFactory.decodeResource(resources, R.drawable.tile_center));
+        tileLeft = Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.tile_left)), 128, 93, false);
+        tileRight =  Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.tile_right)),128, 93, false);
+        tileCenter = Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.tile_center)),128, 93, false);
     }
 
     public static int getTextureWidth(int tileCenterCount) {
