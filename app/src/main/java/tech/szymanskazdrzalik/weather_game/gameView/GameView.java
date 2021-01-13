@@ -17,6 +17,7 @@ import tech.szymanskazdrzalik.weather_game.game.entities.CharacterEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.ObjectEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PlatformEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PlayerEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.PresentEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.SnowballEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.StartingPlatformEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.TexturedGameEntity;
@@ -40,6 +41,40 @@ public class GameView extends SurfaceView implements Runnable {
         }
         v.performClick();
         return true;
+    };
+    private final CollisionEventListener collisionEventListener = new CollisionEventListener() {
+
+        @Override
+        public void onHostileCollision(CharacterEntity e) {
+            GameView.this.gameEvents.addGameEvent(() -> {
+                GameView.this.gameEntities.removeEntity(e);
+                throw new GameOverException();
+            });
+        }
+
+        @Override
+        public void onHostileCollision() {
+            this.onHostileCollision(null);
+        }
+
+        @Override
+        public void onFriendlyCollision(CharacterEntity e) {
+            GameView.this.gameEvents.addGameEvent(() -> {
+                GameView.this.gameEntities.removeEntity(e);
+            });
+        }
+
+        @Override
+        public void onFriendlyCollision(PresentEntity e) {
+            GameView.this.gameEntities.getPlayerEntity().setYSpeedAfterPresentCollision();
+            this.onFriendlyCollision((CharacterEntity) e);
+        }
+
+
+        @Override
+        public void onFriendlyCollision() {
+            this.onFriendlyCollision(null);
+        }
     };
     private OrientationSensorsService orientationSensorsService;
     private Thread thread;
@@ -161,7 +196,7 @@ public class GameView extends SurfaceView implements Runnable {
         this.gameEntities.getPlayerEntity().changeXPos((int) (this.orientationSensorsService.getRollConvertedIntoPlayerPositionChangeCoeff() * 35));
     }
 
-    private void handleGameEvents() {
+    private void handleGameEvents() throws GameOverException {
         this.gameEvents.runGameEvents();
     }
 
@@ -169,7 +204,7 @@ public class GameView extends SurfaceView implements Runnable {
         if (this.gameEntities.detectCollisionWithObjects(this.gameEntities.getPlayerEntity(),
                 this.gameEntities.getObjectGameEntitiesWithYCoordinatesHigherThanParam(
                         (int) (this.gameEntities.getPlayerEntity().getYPos() + this.gameEntities.getPlayerEntity().getTexture().getHeight()) - 100))) {
-            this.gameEvents.addGameEvent(() -> GameView.this.gameEntities.getPlayerEntity().setYSpeedAfterBoostEvent());
+            this.gameEvents.addGameEvent(() -> GameView.this.gameEntities.getPlayerEntity().setYSpeedAfterPlatformCollision());
         }
         this.gameEntities.detectCollisionWithCharacters(this.gameEntities.getPlayerEntity(), this.gameEntities.getCharacterEntities());
     }
@@ -308,8 +343,11 @@ public class GameView extends SurfaceView implements Runnable {
         // TODO: 13.01.2021 INIT w splash screenie zrobic
         PlatformEntity.init(getResources());
         SnowballEntity.init(getResources());
+        PresentEntity.init(getResources());
         this.gameEntities = new GameEntities(new PlayerEntity(w / 2, (int) (h - PlayerEntity.defaultTextureHeight - PlatformEntity.getTextureHeight() - 50), getResources()));
+        this.gameEntities.setCollisionEventListener(this.collisionEventListener);
         this.gameEntities.addEntity(new SnowballEntity(200, 400));
+        this.gameEntities.addEntity(new PresentEntity(400, 600));
         // TODO: 11.01.2021 Ultra krzywe, co jeśli 20 platform nie wypełni ekranu xD
         this.gameEntities.addEntity(new StartingPlatformEntity(h));
         this.generatePlatforms();
@@ -354,7 +392,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void setPlayerSpeedBoostEvent() {
-        this.gameEntities.getPlayerEntity().setYSpeedAfterBoostEvent();
+        this.gameEntities.getPlayerEntity().setYSpeedAfterPlatformCollision();
     }
 
 }

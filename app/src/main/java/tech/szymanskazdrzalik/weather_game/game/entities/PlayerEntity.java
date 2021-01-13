@@ -26,8 +26,12 @@ public class PlayerEntity extends CharacterEntity {
         super(xPos, yPos, defaultTextureWidth, defaultTextureHeight, resources, defaultResource);
     }
 
-    public void setYSpeedAfterBoostEvent() {
+    public void setYSpeedAfterPlatformCollision() {
         this.ySpeed = -22;
+    }
+
+    public void setYSpeedAfterPresentCollision() {
+        this.ySpeed = -30;
     }
 
     public double getYSpeed() {

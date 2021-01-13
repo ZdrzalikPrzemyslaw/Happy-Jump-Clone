@@ -10,7 +10,9 @@ import tech.szymanskazdrzalik.weather_game.game.entities.GameEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.HostileEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.ObjectEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PlayerEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.PresentEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.TexturedGameEntity;
+import tech.szymanskazdrzalik.weather_game.gameView.CollisionEventListener;
 import tech.szymanskazdrzalik.weather_game.gameView.GameOverException;
 
 // TODO: 09.01.2021 Good name?
@@ -19,6 +21,11 @@ public class GameEntities {
     private final List<CharacterEntity> characterGameEntities = new ArrayList<>();
     private final List<ObjectEntity> objectGameEntities = new ArrayList<>();
     private PlayerEntity playerEntity;
+    private CollisionEventListener collisionEventListener;
+
+    public void setCollisionEventListener(CollisionEventListener collisionEventListener) {
+        this.collisionEventListener = collisionEventListener;
+    }
 
     public GameEntities(PlayerEntity playerEntity) {
         this.playerEntity = playerEntity;
@@ -56,7 +63,12 @@ public class GameEntities {
             playerEntityAfterMove.changeYPos(entityToCheck.getYSpeed());
             if (checkCollision(playerEntityAfterMove, o)) {
                 if (o instanceof HostileEntity) {
-                    throw new GameOverException();
+                    if (this.collisionEventListener != null)
+                        collisionEventListener.onHostileCollision(o);
+                }
+                else if (o instanceof PresentEntity) {
+                    if (this.collisionEventListener != null)
+                        collisionEventListener.onFriendlyCollision((PresentEntity) o);
                 }
             }
         }

@@ -10,7 +10,7 @@ public class GameEvents {
         gameEventList.add(e);
     }
 
-    public void runGameEvents() {
+    public void runGameEvents() throws GameOverException {
         for (GameEvent e : gameEventList) {
             e.event();
         }

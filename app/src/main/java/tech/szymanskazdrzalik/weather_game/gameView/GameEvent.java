@@ -1,5 +1,5 @@
 package tech.szymanskazdrzalik.weather_game.gameView;
 
 interface GameEvent {
-    void event();
+    void event() throws GameOverException;
 }
