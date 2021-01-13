@@ -13,9 +13,11 @@ import java.util.Random;
 
 import tech.szymanskazdrzalik.weather_game.GameActivity;
 import tech.szymanskazdrzalik.weather_game.game.GameEntities;
+import tech.szymanskazdrzalik.weather_game.game.entities.CharacterEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.ObjectEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PlatformEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PlayerEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.SnowballEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.StartingPlatformEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.TexturedGameEntity;
 import tech.szymanskazdrzalik.weather_game.sensors.OrientationSensorsService;
@@ -85,10 +87,10 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void checkIfEntitiesAreOnScreenXAxis() {
         for (TexturedGameEntity t : this.gameEntities.getAllEntities()) {
-            if (t.getXPos() + t.getHitboxWidth() < 0) {
-                t.changeXPos(this.background.getTexture().getWidth() + t.getHitboxWidth());
+            if (t.getXPos() + t.getTexture().getWidth() < 0) {
+                t.changeXPos(this.background.getTexture().getWidth() + t.getTexture().getWidth());
             } else if (t.getXPos() > this.background.getTexture().getWidth()) {
-                t.changeXPos(-this.background.getTexture().getWidth() - t.getHitboxWidth());
+                t.changeXPos(-this.background.getTexture().getWidth() - t.getTexture().getWidth());
             }
         }
     }
@@ -163,12 +165,13 @@ public class GameView extends SurfaceView implements Runnable {
         this.gameEvents.runGameEvents();
     }
 
-    private void checkCollisions() {
+    private void checkCollisions() throws GameOverException {
         if (this.gameEntities.detectCollisionWithObjects(this.gameEntities.getPlayerEntity(),
                 this.gameEntities.getObjectGameEntitiesWithYCoordinatesHigherThanParam(
                         (int) (this.gameEntities.getPlayerEntity().getYPos() + this.gameEntities.getPlayerEntity().getTexture().getHeight()) - 100))) {
             this.gameEvents.addGameEvent(() -> GameView.this.gameEntities.getPlayerEntity().setYSpeedAfterBoostEvent());
         }
+        this.gameEntities.detectCollisionWithCharacters(this.gameEntities.getPlayerEntity(), this.gameEntities.getCharacterEntities());
     }
 
     private void update() throws GameOverException {
@@ -228,7 +231,20 @@ public class GameView extends SurfaceView implements Runnable {
         this.handleGameEvents();
         this.checkCollisions();
         this.movePlayer();
+        this.moveCharacters();
         this.checkIfEntitiesAreOnScreenXAxis();
+    }
+
+    private void moveCharacters() {
+        this.moveCharactersXAxis();
+    }
+
+    private void moveCharactersXAxis() {
+        for (CharacterEntity e : this.gameEntities.getCharacterEntities()) {
+            if (e instanceof SnowballEntity) {
+                ((SnowballEntity) e).changeXPos();
+            }
+        }
     }
 
     private void drawBackground(Canvas canvas) {
@@ -289,8 +305,11 @@ public class GameView extends SurfaceView implements Runnable {
         super.onSizeChanged(w, h, oldw, oldh);
         background = new Background(w, h, getResources());
         // TODO: 09.01.2021 Change, testing
+        // TODO: 13.01.2021 INIT w splash screenie zrobic
         PlatformEntity.init(getResources());
+        SnowballEntity.init(getResources());
         this.gameEntities = new GameEntities(new PlayerEntity(w / 2, (int) (h - PlayerEntity.defaultTextureHeight - PlatformEntity.getTextureHeight() - 50), getResources()));
+        this.gameEntities.addEntity(new SnowballEntity(200, 400));
         // TODO: 11.01.2021 Ultra krzywe, co jeśli 20 platform nie wypełni ekranu xD
         this.gameEntities.addEntity(new StartingPlatformEntity(h));
         this.generatePlatforms();

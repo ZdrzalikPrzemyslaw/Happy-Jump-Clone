@@ -7,9 +7,11 @@ import java.util.Optional;
 
 import tech.szymanskazdrzalik.weather_game.game.entities.CharacterEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.GameEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.HostileEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.ObjectEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PlayerEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.TexturedGameEntity;
+import tech.szymanskazdrzalik.weather_game.gameView.GameOverException;
 
 // TODO: 09.01.2021 Good name?
 public class GameEntities {
@@ -37,8 +39,8 @@ public class GameEntities {
         return Optional.empty();
     }
 
-    public boolean detectCollisionWithObjects(PlayerEntity entityToCheck, Iterable<ObjectEntity> entitiesToColide) {
-        for (ObjectEntity o : entitiesToColide) {
+    public boolean detectCollisionWithObjects(PlayerEntity entityToCheck, Iterable<ObjectEntity> entitiesToCollide) {
+        for (ObjectEntity o : entitiesToCollide) {
             PlayerEntity playerEntityAfterMove = new PlayerEntity(entityToCheck);
             playerEntityAfterMove.changeYPos(entityToCheck.getYSpeed());
             if (!checkCollision(entityToCheck, o) && checkCollision(playerEntityAfterMove, o) && entityToCheck.getYSpeed() > 0) {
@@ -48,15 +50,28 @@ public class GameEntities {
         return false;
     }
 
+    public boolean detectCollisionWithCharacters(PlayerEntity entityToCheck, Iterable<CharacterEntity> entitiesToCollide) throws GameOverException {
+        for (CharacterEntity o : entitiesToCollide) {
+            PlayerEntity playerEntityAfterMove = new PlayerEntity(entityToCheck);
+            playerEntityAfterMove.changeYPos(entityToCheck.getYSpeed());
+            if (checkCollision(playerEntityAfterMove, o)) {
+                if (o instanceof HostileEntity) {
+                    throw new GameOverException();
+                }
+            }
+        }
+        return false;
+    }
+
     private boolean checkCollision(TexturedGameEntity e1, TexturedGameEntity e2) {
-        double e1_x_start = e1.getXPos();
-        double e1_y_start = e1.getYPos();
-        double e1_x_end = e1.getXPos() + e1.getHitboxWidth();
-        double e1_y_end = e1.getYPos() + e1.getHitboxHeight();
-        double e2_x_start = e2.getXPos();
-        double e2_y_start = e2.getYPos();
-        double e2_x_end = e2.getXPos() + e2.getHitboxWidth();
-        double e2_y_end = e2.getYPos() + e2.getHitboxHeight();
+        double e1_x_start = e1.getHiboxStartX();
+        double e1_y_start = e1.getHiboxStartY();
+        double e1_x_end = e1.getHiboxStartX() + e1.getHitboxWidth();
+        double e1_y_end = e1.getHiboxStartY() + e1.getHitboxHeight();
+        double e2_x_start = e2.getHiboxStartX();
+        double e2_y_start = e2.getHiboxStartY();
+        double e2_x_end = e2.getHiboxStartX() + e2.getHitboxWidth();
+        double e2_y_end = e2.getHiboxStartY() + e2.getHitboxHeight();
 
         return e1_x_start < e2_x_end &&
                 e1_x_end > e2_x_start &&

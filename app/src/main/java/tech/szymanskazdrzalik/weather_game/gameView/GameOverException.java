@@ -1,6 +1,6 @@
 package tech.szymanskazdrzalik.weather_game.gameView;
 
-class GameOverException extends Exception {
+public class GameOverException extends Exception {
     public GameOverException() {
     }
 
