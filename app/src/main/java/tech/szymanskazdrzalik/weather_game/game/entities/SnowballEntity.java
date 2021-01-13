@@ -18,7 +18,6 @@ public class SnowballEntity extends HostileEntity {
     private final double xSpeed = 10;
     private int currentTexture = 0;
     private HostileEntityDirections directions = HostileEntityDirections.LEFT;
-    private double movedAmount = 0;
 
     public SnowballEntity(int xPos, int yPos) {
         super(xPos, yPos, DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, bitmapList.get(0));
@@ -57,13 +56,6 @@ public class SnowballEntity extends HostileEntity {
         }
     }
 
-    public double getMovedAmount() {
-        return movedAmount;
-    }
-
-    public void setMovedAmount(double movedAmount) {
-        this.movedAmount = movedAmount;
-    }
 
     @Override
     public Bitmap getTexture() {

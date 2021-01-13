@@ -5,6 +5,6 @@ import android.content.res.Resources;
 public class StartingPlatformEntity extends PlatformEntity {
 
     public StartingPlatformEntity(int yPos) {
-        super(-100, yPos, 20);
+        super(-100, yPos + 20, 20);
     }
 }
