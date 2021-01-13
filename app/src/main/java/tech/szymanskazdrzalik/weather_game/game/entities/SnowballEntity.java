@@ -23,6 +23,7 @@ public class SnowballEntity extends HostileEntity {
     public SnowballEntity(int xPos, int yPos) {
         super(xPos, yPos, DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, bitmapList.get(0));
     }
+
     public SnowballEntity(int xPos, int yPos, HostileEntityDirections directions) {
         super(xPos, yPos, DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, bitmapList.get(0));
         this.directions = directions;
@@ -105,12 +106,16 @@ public class SnowballEntity extends HostileEntity {
 
 
     @Override
-    public double getHiboxStartX() {
-        return this.getXPos() + this.getTexture().getWidth() / 2.f;
+    public double getHitboxStartX() {
+        if (this.directions == HostileEntityDirections.LEFT) {
+            return this.getXPos() + this.getTexture().getWidth() / 4.f;
+        } else {
+            return this.getXPos() + this.getTexture().getWidth() * 3 / 4.f;
+        }
     }
 
     @Override
-    public double getHiboxStartY() {
+    public double getHitboxStartY() {
         return this.getYPos() + this.getTexture().getHeight() / 2.f;
     }
 

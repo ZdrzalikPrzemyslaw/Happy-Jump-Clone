@@ -64,14 +64,14 @@ public class GameEntities {
     }
 
     private boolean checkCollision(TexturedGameEntity e1, TexturedGameEntity e2) {
-        double e1_x_start = e1.getHiboxStartX();
-        double e1_y_start = e1.getHiboxStartY();
-        double e1_x_end = e1.getHiboxStartX() + e1.getHitboxWidth();
-        double e1_y_end = e1.getHiboxStartY() + e1.getHitboxHeight();
-        double e2_x_start = e2.getHiboxStartX();
-        double e2_y_start = e2.getHiboxStartY();
-        double e2_x_end = e2.getHiboxStartX() + e2.getHitboxWidth();
-        double e2_y_end = e2.getHiboxStartY() + e2.getHitboxHeight();
+        double e1_x_start = e1.getHitboxStartX();
+        double e1_y_start = e1.getHitboxStartY();
+        double e1_x_end = e1.getHitboxStartX() + e1.getHitboxWidth();
+        double e1_y_end = e1.getHitboxStartY() + e1.getHitboxHeight();
+        double e2_x_start = e2.getHitboxStartX();
+        double e2_y_start = e2.getHitboxStartY();
+        double e2_x_end = e2.getHitboxStartX() + e2.getHitboxWidth();
+        double e2_y_end = e2.getHitboxStartY() + e2.getHitboxHeight();
 
         return e1_x_start < e2_x_end &&
                 e1_x_end > e2_x_start &&

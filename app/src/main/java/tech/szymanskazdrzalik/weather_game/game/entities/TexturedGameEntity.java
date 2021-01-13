@@ -24,11 +24,11 @@ public class TexturedGameEntity extends GameEntity {
         return this.texture.getWidth();
     }
 
-    public double getHiboxStartX() {
+    public double getHitboxStartX() {
         return this.getXPos();
     }
 
-    public double getHiboxStartY() {
+    public double getHitboxStartY() {
         return this.getYPos();
     }
 
