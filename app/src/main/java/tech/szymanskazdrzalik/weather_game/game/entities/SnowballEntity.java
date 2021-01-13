@@ -17,6 +17,8 @@ public class SnowballEntity extends HostileEntity {
     private int currentTexture = 0;
     private HostileEntityDirections directions = HostileEntityDirections.LEFT;
 
+    private double movedAmount = 0;
+
     private double xSpeed = 10;
 
     public SnowballEntity(int xPos, int yPos) {
@@ -70,6 +72,10 @@ public class SnowballEntity extends HostileEntity {
     public void changeXPos(double delta) {
         super.changeXPos(delta);
         this.changeTexture();
+        this.movedAmount += delta;
+        if (Math.abs(movedAmount) >= 200) {
+            this.directions = this.getDirections() == HostileEntityDirections.LEFT ? HostileEntityDirections.RIGHT : HostileEntityDirections.LEFT;
+        }
     }
 
     public void changeXPos() {
