@@ -85,10 +85,10 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void checkIfEntitiesAreOnScreenXAxis() {
         for (TexturedGameEntity t : this.gameEntities.getAllEntities()) {
-            if (t.getXPos() + t.getTexture().getWidth() < 0) {
-                t.changeXPos(this.background.getTexture().getWidth() + t.getTexture().getWidth());
+            if (t.getXPos() + t.getHitboxWidth() < 0) {
+                t.changeXPos(this.background.getTexture().getWidth() + t.getHitboxWidth());
             } else if (t.getXPos() > this.background.getTexture().getWidth()) {
-                t.changeXPos(-this.background.getTexture().getWidth() - t.getTexture().getWidth());
+                t.changeXPos(-this.background.getTexture().getWidth() - t.getHitboxWidth());
             }
         }
     }
@@ -164,7 +164,9 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void checkCollisions() {
-        if (this.gameEntities.detectCollisionWithObjects(this.gameEntities.getPlayerEntity(), this.gameEntities.getObjectGameEntitiesWithYCoordinatesHigherThanParam((int) (this.gameEntities.getPlayerEntity().getYPos() + this.gameEntities.getPlayerEntity().getTexture().getHeight()) - 100))) {
+        if (this.gameEntities.detectCollisionWithObjects(this.gameEntities.getPlayerEntity(),
+                this.gameEntities.getObjectGameEntitiesWithYCoordinatesHigherThanParam(
+                        (int) (this.gameEntities.getPlayerEntity().getYPos() + this.gameEntities.getPlayerEntity().getTexture().getHeight()) - 100))) {
             this.gameEvents.addGameEvent(() -> GameView.this.gameEntities.getPlayerEntity().setYSpeedAfterBoostEvent());
         }
     }

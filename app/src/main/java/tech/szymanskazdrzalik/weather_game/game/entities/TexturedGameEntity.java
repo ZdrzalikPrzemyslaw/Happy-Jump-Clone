@@ -16,6 +16,14 @@ public class TexturedGameEntity extends GameEntity {
         this.texture = texture;
     }
 
+    public int getHitboxHeight() {
+        return this.texture.getHeight();
+    }
+
+    public int getHitboxWidth() {
+        return this.texture.getWidth();
+    }
+
     public TexturedGameEntity(Point location, int textureWidth, int textureHeight, Bitmap bitmap) {
         super(location);
         this.texture = Bitmap.createScaledBitmap(bitmap, textureWidth, textureHeight, false);

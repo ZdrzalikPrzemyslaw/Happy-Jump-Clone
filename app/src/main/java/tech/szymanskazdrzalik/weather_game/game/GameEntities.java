@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import tech.szymanskazdrzalik.weather_game.game.entities.CharacterEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.GameEntity;
@@ -40,7 +39,6 @@ public class GameEntities {
 
     public boolean detectCollisionWithObjects(PlayerEntity entityToCheck, Iterable<ObjectEntity> entitiesToColide) {
         for (ObjectEntity o : entitiesToColide) {
-            // check if x matches
             PlayerEntity playerEntityAfterMove = new PlayerEntity(entityToCheck);
             playerEntityAfterMove.changeYPos(entityToCheck.getYSpeed());
             if (!checkCollision(entityToCheck, o) && checkCollision(playerEntityAfterMove, o) && entityToCheck.getYSpeed() > 0) {
@@ -50,15 +48,15 @@ public class GameEntities {
         return false;
     }
 
-    private boolean checkCollision(PlayerEntity e1, TexturedGameEntity e2) {
+    private boolean checkCollision(TexturedGameEntity e1, TexturedGameEntity e2) {
         double e1_x_start = e1.getXPos();
         double e1_y_start = e1.getYPos();
-        double e1_x_end = e1.getXPos() + e1.getTexture().getWidth();
-        double e1_y_end = e1.getYPos() + e1.getTexture().getHeight();
+        double e1_x_end = e1.getXPos() + e1.getHitboxWidth();
+        double e1_y_end = e1.getYPos() + e1.getHitboxHeight();
         double e2_x_start = e2.getXPos();
         double e2_y_start = e2.getYPos();
-        double e2_x_end = e2.getXPos() + e2.getTexture().getWidth();
-        double e2_y_end = e2.getYPos() + e2.getTexture().getHeight();
+        double e2_x_end = e2.getXPos() + e2.getHitboxWidth();
+        double e2_y_end = e2.getYPos() + e2.getHitboxHeight();
 
         return e1_x_start < e2_x_end &&
                 e1_x_end > e2_x_start &&
