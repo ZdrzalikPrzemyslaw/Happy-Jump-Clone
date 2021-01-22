@@ -1,5 +1,7 @@
 package tech.szymanskazdrzalik.weather_game.game.entities;
 
+import tech.szymanskazdrzalik.weather_game.gameView.GameOverException;
+
 // FIXME: 13.01.2021
 public class SnowballEntityTurnable extends SnowballEntity {
     private double movedAmount = 0;
@@ -21,7 +23,7 @@ public class SnowballEntityTurnable extends SnowballEntity {
     }
 
     @Override
-    public void changeXPos(int delta) {
+    public void changeXPos(int delta) throws GameOverException {
         super.changeXPos(delta);
         this.setMovedAmount(this.getMovedAmount() + delta);
         if (Math.abs(this.getMovedAmount()) >= 200) {

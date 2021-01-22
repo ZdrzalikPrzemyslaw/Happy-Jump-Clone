@@ -2,6 +2,8 @@ package tech.szymanskazdrzalik.weather_game.game.entities.parent_entities;
 
 import android.graphics.Point;
 
+import tech.szymanskazdrzalik.weather_game.gameView.GameOverException;
+
 public abstract class GameEntity {
     private double x_pos;
     private double y_pos;
@@ -36,11 +38,11 @@ public abstract class GameEntity {
         this.y_pos = y;
     }
 
-    public void changeXPos(int delta) {
+    public void changeXPos(int delta) throws GameOverException {
         this.x_pos = this.x_pos + delta;
     }
 
-    public void changeXPos(double delta) {
+    public void changeXPos(double delta) throws GameOverException {
         this.x_pos = this.x_pos + delta;
     }
 

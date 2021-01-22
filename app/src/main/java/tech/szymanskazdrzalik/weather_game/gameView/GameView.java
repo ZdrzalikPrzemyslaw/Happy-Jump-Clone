@@ -38,7 +38,9 @@ public class GameView extends SurfaceView implements Runnable {
         public void onHostileCollision(CharacterEntity e) {
             GameView.this.gameEvents.addGameEvent(() -> {
                 GameView.this.gameEntities.removeEntity(e);
-                throw new GameOverException();
+                if (!GameView.this.gameEntities.getPlayerEntity().isHasDied()) {
+                    throw new GameOverException();
+                }
             });
         }
 
@@ -107,17 +109,23 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void checkGameOverConditions() throws GameOverException {
         if (this.gameEntities.getPlayerEntity().getYPos() > (this.background.getTexture().getHeight() + 10)) {
-            throw new GameOverException("Game Over");
+            if (!GameView.this.gameEntities.getPlayerEntity().isHasDied()) {
+                throw new GameOverException();
+            }
         }
     }
 
     private void checkIfEntitiesAreOnScreenXAxis() {
-        for (TexturedGameEntity t : this.gameEntities.getAllEntities()) {
-            if (t.getXPos() + t.getTexture().getWidth() < 0) {
-                t.changeXPos(this.background.getTexture().getWidth() + t.getTexture().getWidth());
-            } else if (t.getXPos() > this.background.getTexture().getWidth()) {
-                t.changeXPos(-this.background.getTexture().getWidth() - t.getTexture().getWidth());
+        try {
+            for (TexturedGameEntity t : this.gameEntities.getAllEntities()) {
+                if (t.getXPos() + t.getTexture().getWidth() < 0) {
+                    t.changeXPos(this.background.getTexture().getWidth() + t.getTexture().getWidth());
+                } else if (t.getXPos() > this.background.getTexture().getWidth()) {
+                    t.changeXPos(-this.background.getTexture().getWidth() - t.getTexture().getWidth());
+                }
             }
+        } catch (GameOverException e) {
+            e.printStackTrace();
         }
     }
 
@@ -179,13 +187,15 @@ public class GameView extends SurfaceView implements Runnable {
                 moved = 0;
             }
             if (shouldLose && startingPlatformEntity == null) {
-                throw new GameOverException();
+                if (!GameView.this.gameEntities.getPlayerEntity().isHasDied()) {
+                    throw new GameOverException();
+                }
             }
         }
 
     }
 
-    private void movePlayerXAxis() {
+    private void movePlayerXAxis() throws GameOverException {
         this.gameEntities.getPlayerEntity().changeXPos((int) (this.orientationSensorsService.getRollConvertedIntoPlayerPositionChangeCoeff() * 35));
     }
 
@@ -277,10 +287,14 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void moveCharactersXAxis() {
-        for (CharacterEntity e : this.gameEntities.getCharacterEntities()) {
-            if (e instanceof SnowballEntity) {
-                ((SnowballEntity) e).changeXPos();
+        try {
+            for (CharacterEntity e : this.gameEntities.getCharacterEntities()) {
+                if (e instanceof SnowballEntity) {
+                    ((SnowballEntity) e).changeXPos();
+                }
             }
+        } catch (GameOverException e) {
+            e.printStackTrace();
         }
     }
 
@@ -366,9 +380,13 @@ public class GameView extends SurfaceView implements Runnable {
                     this.sleep(60);
                 }
             } catch (GameOverException e) {
-                gameOverListener.onGameOver();
-                e.printStackTrace();
-                break;
+                if (!gameEntities.getPlayerEntity().isHasDied()) {
+                    gameEntities.getPlayerEntity().setDeadTexture();
+                } else {
+                    gameOverListener.onGameOver();
+                    e.printStackTrace();
+                    break;
+                }
             }
         }
     }

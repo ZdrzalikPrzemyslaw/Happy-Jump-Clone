@@ -10,6 +10,7 @@ import java.util.List;
 
 import tech.szymanskazdrzalik.weather_game.R;
 import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.HostileEntity;
+import tech.szymanskazdrzalik.weather_game.gameView.GameOverException;
 
 public class SnowballEntity extends HostileEntity {
 
@@ -70,7 +71,7 @@ public class SnowballEntity extends HostileEntity {
     }
 
     @Override
-    public void changeXPos(int delta) {
+    public void changeXPos(int delta) throws GameOverException {
         super.changeXPos(delta);
         this.changeTexture();
     }
@@ -124,12 +125,12 @@ public class SnowballEntity extends HostileEntity {
     }
 
     @Override
-    public void changeXPos(double delta) {
+    public void changeXPos(double delta) throws GameOverException {
         super.changeXPos(delta);
         this.changeTexture();
     }
 
-    public void changeXPos() {
+    public void changeXPos() throws GameOverException {
         if (this.directions == EntityDirections.LEFT) {
             this.changeXPos(-this.xSpeed);
         } else {
