@@ -247,7 +247,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void generateInitialPlatforms() {
         int highestPlatformY = this.generatePlatformsCheckHeight();
-        Pair<Iterable<ObjectEntity>, Iterable<CharacterEntity>> pair = GenerationPatterns.getGiftPlatformPattern(this.background.getTexture().getWidth(), highestPlatformY);
+        Pair<Iterable<ObjectEntity>, Iterable<CharacterEntity>> pair = GenerationPatterns.getDefaultPlatformPattern(this.background.getTexture().getWidth(), highestPlatformY);
         this.gameEntities.addObjectEntities(pair.first);
         this.gameEntities.addCharacterEntities(pair.second);
     }
