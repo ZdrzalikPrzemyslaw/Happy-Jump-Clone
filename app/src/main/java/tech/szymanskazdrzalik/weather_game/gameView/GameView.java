@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Pair;
-import android.view.MotionEvent;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ import java.util.List;
 
 import tech.szymanskazdrzalik.weather_game.GameActivity;
 import tech.szymanskazdrzalik.weather_game.game.GameEntities;
-import tech.szymanskazdrzalik.weather_game.game.entities.PlatformEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PlayerEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PresentEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.SnowballEntity;
@@ -34,15 +32,6 @@ public class GameView extends SurfaceView implements Runnable {
     private GameEvents gameEvents;
     private GameActivity.ScoreListener scoreListener;
     private GameEntities gameEntities;
-    private final OnTouchListener touchListener = (v, event) -> {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                this.gameEvents.addGameEvent(this::setPlayerSpeedBoostEvent);
-                break;
-        }
-        v.performClick();
-        return true;
-    };
     private final CollisionEventListener collisionEventListener = new CollisionEventListener() {
 
         @Override
@@ -344,7 +333,6 @@ public class GameView extends SurfaceView implements Runnable {
         this.paint = new Paint();
         this.orientationSensorsService = new OrientationSensorsService(getContext());
         this.gameEvents = new GameEvents();
-        this.setOnTouchListener(touchListener);
         // TODO: 09.01.2021
     }
 

@@ -53,51 +53,64 @@ public class PlayerEntity extends CharacterEntity {
         runningTextureList = new ArrayList<>();
         textureTypesList = new ArrayList<>();
         textureTypesList.add(0, runningTextureList);
-        for (int i = 0; i < 4; i++) {
-            runningTextureList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.santa_run_01)), defaultTextureWidth, defaultTextureHeight, false));
-        }
-        for (int i = 0; i < 4; i++) {
-            runningTextureList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.santa_run_02)), defaultTextureWidth, defaultTextureHeight, false));
-        }
-        for (int i = 0; i < 4; i++) {
-            runningTextureList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.santa_run_03)), defaultTextureWidth, defaultTextureHeight, false));
-        }
-        for (int i = 0; i < 4; i++) {
-            runningTextureList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.santa_run_04)), defaultTextureWidth, defaultTextureHeight, false));
-        }
-        for (int i = 0; i < 4; i++) {
-            runningTextureList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.santa_run_05)), defaultTextureWidth, defaultTextureHeight, false));
-        }
-        for (int i = 0; i < 4; i++) {
-            runningTextureList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.santa_run_06)), defaultTextureWidth, defaultTextureHeight, false));
-        }
-        for (int i = 0; i < 4; i++) {
-            runningTextureList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.santa_run_07)), defaultTextureWidth, defaultTextureHeight, false));
-        }
-        for (int i = 0; i < 4; i++) {
-            runningTextureList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.santa_run_08)), defaultTextureWidth, defaultTextureHeight, false));
-        }
-        for (int i = 0; i < 4; i++) {
-            runningTextureList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.santa_run_09)), defaultTextureWidth, defaultTextureHeight, false));
-        }
-        for (int i = 0; i < 4; i++) {
-            runningTextureList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.santa_run_10)), defaultTextureWidth, defaultTextureHeight, false));
-        }
-        for (int i = 0; i < 4; i++) {
-            runningTextureList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.santa_run_11)), defaultTextureWidth, defaultTextureHeight, false));
-        }
+    }
 
+    private void addRunningBitmaps(Resources resources) {
+        Bitmap bitmap1 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.santa_run_01)), defaultTextureWidth, defaultTextureHeight, false));
+        Bitmap bitmap2 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.santa_run_02)), defaultTextureWidth, defaultTextureHeight, false));
+        Bitmap bitmap3 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.santa_run_03)), defaultTextureWidth, defaultTextureHeight, false));
+        Bitmap bitmap4 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.santa_run_04)), defaultTextureWidth, defaultTextureHeight, false));
+        Bitmap bitmap5 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.santa_run_05)), defaultTextureWidth, defaultTextureHeight, false));
+        Bitmap bitmap6 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.santa_run_06)), defaultTextureWidth, defaultTextureHeight, false));
+        Bitmap bitmap7 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.santa_run_07)), defaultTextureWidth, defaultTextureHeight, false));
+        Bitmap bitmap8 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.santa_run_08)), defaultTextureWidth, defaultTextureHeight, false));
+        Bitmap bitmap9 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.santa_run_09)), defaultTextureWidth, defaultTextureHeight, false));
+        Bitmap bitmap10 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.santa_run_10)), defaultTextureWidth, defaultTextureHeight, false));
+        Bitmap bitmap11 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.santa_run_11)), defaultTextureWidth, defaultTextureHeight, false));
+        for (int i = 0; i < 4; i++) {
+            runningTextureList.add(bitmap1);
+        }
+        for (int i = 0; i < 4; i++) {
+            runningTextureList.add(bitmap2);
+        }
+        for (int i = 0; i < 4; i++) {
+            runningTextureList.add(bitmap3);
+        }
+        for (int i = 0; i < 4; i++) {
+            runningTextureList.add(bitmap4);
+        }
+        for (int i = 0; i < 4; i++) {
+            runningTextureList.add(bitmap5);
+        }
+        for (int i = 0; i < 4; i++) {
+            runningTextureList.add(bitmap6);
+        }
+        for (int i = 0; i < 4; i++) {
+            runningTextureList.add(bitmap7);
+        }
+        for (int i = 0; i < 4; i++) {
+            runningTextureList.add(bitmap8);
+        }
+        for (int i = 0; i < 4; i++) {
+            runningTextureList.add(bitmap9);
+        }
+        for (int i = 0; i < 4; i++) {
+            runningTextureList.add(bitmap10);
+        }
+        for (int i = 0; i < 4; i++) {
+            runningTextureList.add(bitmap11);
+        }
     }
 
     private void changeTexture() {

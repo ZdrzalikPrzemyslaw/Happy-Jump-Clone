@@ -31,29 +31,35 @@ public class SnowballEntity extends HostileEntity {
 
     public static void init(Resources resources) {
         bitmapList = new ArrayList<>();
+        Bitmap bitmap1 = Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.snowball_01)), DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, false);
+        Bitmap bitmap2 = Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.snowball_02)), DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, false);
+        Bitmap bitmap3 = Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.snowball_03)), DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, false);
+        Bitmap bitmap4 = Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.snowball_04)), DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, false);
+        Bitmap bitmap5 = Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.snowball_05)), DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, false);
+        Bitmap bitmap6 = Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
+                resources, R.drawable.snowball_06)), DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, false);
         for (int i = 0; i < 4; i++) {
-            bitmapList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.snowball_01)), DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, false));
+            bitmapList.add(bitmap1);
         }
         for (int i = 0; i < 4; i++) {
-            bitmapList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.snowball_02)), DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, false));
+            bitmapList.add(bitmap2);
         }
         for (int i = 0; i < 4; i++) {
-            bitmapList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.snowball_03)), DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, false));
+            bitmapList.add(bitmap3);
         }
         for (int i = 0; i < 4; i++) {
-            bitmapList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.snowball_04)), DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, false));
+            bitmapList.add(bitmap4);
         }
         for (int i = 0; i < 4; i++) {
-            bitmapList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.snowball_05)), DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, false));
+            bitmapList.add(bitmap5);
         }
         for (int i = 0; i < 4; i++) {
-            bitmapList.add(Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                    resources, R.drawable.snowball_06)), DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, false));
+            bitmapList.add(bitmap6);
         }
     }
 
