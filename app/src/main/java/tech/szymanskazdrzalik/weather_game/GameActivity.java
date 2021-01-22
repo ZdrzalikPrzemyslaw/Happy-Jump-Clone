@@ -29,8 +29,6 @@ public class GameActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         binding = ActivityGameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        binding.textViewScore.setText("Score = 0");
-
     }
 
     @Override
@@ -45,14 +43,9 @@ public class GameActivity extends AppCompatActivity {
         binding.gameView.resume();
         binding.gameView.setGameOverListener(() -> {
             // TODO: 22.01.2021 Zrobic to inacsej
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    GameActivity.this.recreate();
-                }
-            });
+            runOnUiThread(GameActivity.this::recreate);
         });
-        binding.gameView.setScoreListener(() -> runOnUiThread(() -> binding.textViewScore.setText(String.format("Score = %d", (int) (binding.gameView.getScore())))));
+        binding.gameView.setScoreListener(() -> runOnUiThread(() -> binding.textViewScore.setText(String.format("%d", (int) (binding.gameView.getScore())))));
     }
 
     public void onStartGameButtonOnClick(View v) {

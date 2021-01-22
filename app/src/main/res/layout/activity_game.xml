@@ -24,15 +24,36 @@
             android:onClick="onStartGameButtonOnClick"
             android:text="@string/play" />
 
-        <TextView
-            android:id="@+id/textViewScore"
+        <FrameLayout
+            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="5dp"
-            android:text="PLACEHOLDER" />
+            android:layout_alignParentTop="true">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:id="@+id/textViewScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:typeface="monospace"
+                    style="@style/shadoweffect"
+
+
+                    android:text="0"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"/>
+            </RelativeLayout>
+        </FrameLayout>
 
     </RelativeLayout>
 
