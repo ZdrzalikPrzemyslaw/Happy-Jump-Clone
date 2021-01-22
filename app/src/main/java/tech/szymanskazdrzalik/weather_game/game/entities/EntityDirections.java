@@ -4,7 +4,7 @@ public enum EntityDirections {
     LEFT(0),
     RIGHT(1);
 
-    private EntityDirections(int direction) {
+    EntityDirections(int direction) {
         this.direction = direction;
     }
 

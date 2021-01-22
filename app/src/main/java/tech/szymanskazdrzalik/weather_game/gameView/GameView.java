@@ -207,11 +207,17 @@ public class GameView extends SurfaceView implements Runnable {
         if (this.isPlaying) {
             if (this.gameEntities.detectCollisionWithObjects(
                     this.gameEntities.getPlayerEntity(),
-                    this.gameEntities.getObjectGameEntitiesWithYCoordinatesHigherThanParam(
-                            (int) (this.gameEntities.getPlayerEntity().getYPos())))) {
+                    this.gameEntities.getObjectGameEntitiesWithYCoordinatesHigherThanParamAndLowerThanParam(
+                            (int) (this.gameEntities.getPlayerEntity().getYPos()),
+                                this.background.getTexture().getHeight()))) {
                 this.gameEvents.addGameEvent(() -> GameView.this.gameEntities.getPlayerEntity().setYSpeedAfterPlatformCollision());
             }
-            this.gameEntities.detectCollisionWithCharacters(this.gameEntities.getPlayerEntity(), this.gameEntities.getCharacterEntities());
+            this.gameEntities.detectCollisionWithCharacters(
+                    this.gameEntities.getPlayerEntity(),
+                    this.gameEntities.getCharacterEntitiesWithYCoordinatesHigherThanParamAndLowerThanParam(
+                    (int) (this.gameEntities.getPlayerEntity().getYPos()),
+                            this.background.getTexture().getHeight())
+            );
         }
     }
 
@@ -241,7 +247,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void generateInitialPlatforms() {
         int highestPlatformY = this.generatePlatformsCheckHeight();
-        Pair<Iterable<ObjectEntity>, Iterable<CharacterEntity>> pair = GenerationPatterns.getDefaultPlatformPattern(this.background.getTexture().getWidth(), highestPlatformY);
+        Pair<Iterable<ObjectEntity>, Iterable<CharacterEntity>> pair = GenerationPatterns.getGiftPlatformPattern(this.background.getTexture().getWidth(), highestPlatformY);
         this.gameEntities.addObjectEntities(pair.first);
         this.gameEntities.addCharacterEntities(pair.second);
     }

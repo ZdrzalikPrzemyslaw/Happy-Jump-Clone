@@ -137,14 +137,24 @@ public class GameEntities {
         return Collections.unmodifiableList(this.characterGameEntities);
     }
 
+    public List<CharacterEntity> getCharacterEntitiesWithYCoordinatesHigherThanParamAndLowerThanParam(int yCoordinate, int yCoordinate2) {
+        List<CharacterEntity> list = new ArrayList<>();
+        for (CharacterEntity o : this.characterGameEntities) {
+            if (o.getYPos() > yCoordinate && o.getYPos() < yCoordinate2) {
+                list.add(o);
+            }
+        }
+        return Collections.unmodifiableList(list);
+    }
+
     public List<ObjectEntity> getObjectGameEntities() {
         return Collections.unmodifiableList(this.objectGameEntities);
     }
 
-    public List<ObjectEntity> getObjectGameEntitiesWithYCoordinatesHigherThanParam(int yCoordinate) {
+    public List<ObjectEntity> getObjectGameEntitiesWithYCoordinatesHigherThanParamAndLowerThanParam(int yCoordinate, int yCoordinate2) {
         List<ObjectEntity> list = new ArrayList<>();
         for (ObjectEntity o : this.objectGameEntities) {
-            if (o.getYPos() > yCoordinate) {
+            if (o.getYPos() > yCoordinate && o.getYPos() < yCoordinate2) {
                 list.add(o);
             }
         }

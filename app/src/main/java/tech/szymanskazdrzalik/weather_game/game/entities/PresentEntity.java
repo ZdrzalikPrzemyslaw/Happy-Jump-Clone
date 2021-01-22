@@ -13,8 +13,8 @@ import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.Friendl
 
 public class PresentEntity extends FriendlyEntity {
 
-    private final static int DEFAULT_TEXTURE_WIDTH = 128;
-    private final static int DEFAULT_TEXTURE_HEIGHT = 128;
+    public final static int DEFAULT_TEXTURE_WIDTH = 128;
+    public final static int DEFAULT_TEXTURE_HEIGHT = 128;
 
     private static List<Bitmap> presentsTextures;
 
