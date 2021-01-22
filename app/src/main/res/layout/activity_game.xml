@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:onClick="onStartGameButtonOnClick"
-            android:text="@string/play" />
+            android:background="@drawable/play" />
 
         <FrameLayout
             android:layout_centerHorizontal="true"
