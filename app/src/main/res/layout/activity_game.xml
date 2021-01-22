@@ -16,19 +16,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
+        <ImageButton
             android:id="@+id/startGameButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_centerInParent="true"
+            android:background="@drawable/play"
+            android:contentDescription="@string/play"
             android:onClick="onStartGameButtonOnClick"
-            android:background="@drawable/play" />
+            android:scaleType="fitXY" />
+
+        <ImageButton
+            android:visibility="invisible"
+            android:id="@+id/pauseButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/pause_off"
+            android:contentDescription="@string/pause"
+            android:onClick="pauseButtonOnClick"
+            android:scaleType="fitXY" />
+
 
         <FrameLayout
-            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
@@ -42,16 +57,16 @@
 
                 <TextView
                     android:id="@+id/textViewScore"
+                    style="@style/shadoweffect"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:typeface="monospace"
-                    style="@style/shadoweffect"
-
-
-                    android:text="0"
                     android:paddingStart="20dp"
-                    android:paddingEnd="20dp"/>
+
+
+                    android:paddingEnd="20dp"
+                    android:text="0"
+                    android:typeface="monospace" />
             </RelativeLayout>
         </FrameLayout>
 

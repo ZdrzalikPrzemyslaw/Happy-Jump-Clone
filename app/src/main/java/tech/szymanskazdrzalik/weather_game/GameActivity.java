@@ -1,12 +1,12 @@
 package tech.szymanskazdrzalik.weather_game;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import tech.szymanskazdrzalik.weather_game.databinding.ActivityGameBinding;
 import tech.szymanskazdrzalik.weather_game.gameView.GameView;
@@ -14,14 +14,6 @@ import tech.szymanskazdrzalik.weather_game.gameView.GameView;
 public class GameActivity extends AppCompatActivity {
 
     ActivityGameBinding binding;
-
-    public interface GameOverListener{
-        void onGameOver();
-    }
-
-    public interface ScoreListener {
-        void onScoreChange();
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +29,15 @@ public class GameActivity extends AppCompatActivity {
         binding.gameView.pause();
     }
 
+    public void pauseButtonOnClick(View v) {
+        binding.gameView.togglePauseGame();
+        if (binding.gameView.isPaused()) {
+            runOnUiThread(() -> binding.pauseButton.setBackground(ContextCompat.getDrawable(GameActivity.this, R.drawable.pause_on)));
+        } else {
+            runOnUiThread(() -> binding.pauseButton.setBackground(ContextCompat.getDrawable(GameActivity.this, R.drawable.pause_off)));
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -50,6 +51,15 @@ public class GameActivity extends AppCompatActivity {
 
     public void onStartGameButtonOnClick(View v) {
         binding.gameView.startGame();
+        binding.pauseButton.setVisibility(View.VISIBLE);
         binding.startGameButton.setVisibility(View.INVISIBLE);
+    }
+
+    public interface GameOverListener {
+        void onGameOver();
+    }
+
+    public interface ScoreListener {
+        void onScoreChange();
     }
 }

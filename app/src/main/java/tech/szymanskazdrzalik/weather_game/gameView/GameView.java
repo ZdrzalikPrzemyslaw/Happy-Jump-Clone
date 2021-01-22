@@ -24,7 +24,8 @@ import tech.szymanskazdrzalik.weather_game.sensors.OrientationSensorsService;
 
 public class GameView extends SurfaceView implements Runnable {
     private static int tick = 0;
-    private boolean isPlaying = false;
+    private boolean isPlaying;
+    private boolean isPaused;
     private Background background;
     private Paint paint;
     private double score;
@@ -209,13 +210,13 @@ public class GameView extends SurfaceView implements Runnable {
                     this.gameEntities.getPlayerEntity(),
                     this.gameEntities.getObjectGameEntitiesWithYCoordinatesHigherThanParamAndLowerThanParam(
                             (int) (this.gameEntities.getPlayerEntity().getYPos()),
-                                this.background.getTexture().getHeight()))) {
+                            this.background.getTexture().getHeight()))) {
                 this.gameEvents.addGameEvent(() -> GameView.this.gameEntities.getPlayerEntity().setYSpeedAfterPlatformCollision());
             }
             this.gameEntities.detectCollisionWithCharacters(
                     this.gameEntities.getPlayerEntity(),
                     this.gameEntities.getCharacterEntitiesWithYCoordinatesHigherThanParamAndLowerThanParam(
-                    (int) (this.gameEntities.getPlayerEntity().getYPos()),
+                            (int) (this.gameEntities.getPlayerEntity().getYPos()),
                             this.background.getTexture().getHeight())
             );
         }
@@ -350,6 +351,8 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void init() {
+        this.isPlaying = false;
+        this.isPaused = false;
         this.paint = new Paint();
         this.orientationSensorsService = new OrientationSensorsService(getContext());
         this.gameEvents = new GameEvents();
@@ -379,12 +382,14 @@ public class GameView extends SurfaceView implements Runnable {
     @Override
     public void run() {
         while (true) {
+            while (!this.hasLoaded) {
+            }
             try {
-                if (this.hasLoaded) {
+                if (!this.isPaused()) {
                     this.update();
-                    this.draw();
-                    this.sleep(60);
                 }
+                this.draw();
+                this.sleep(60);
             } catch (GameOverException e) {
                 if (!gameEntities.getPlayerEntity().isHasDied()) {
                     gameEntities.getPlayerEntity().setDeadTexture();
@@ -401,6 +406,14 @@ public class GameView extends SurfaceView implements Runnable {
         this.orientationSensorsService.registerListeners();
         thread = new Thread(this);
         thread.start();
+    }
+
+    public void togglePauseGame() {
+        this.isPaused = !this.isPaused;
+    }
+
+    public boolean isPaused() {
+        return isPaused;
     }
 
     public void pause() {
