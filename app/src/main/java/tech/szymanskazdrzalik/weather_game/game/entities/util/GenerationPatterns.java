@@ -57,6 +57,7 @@ public class GenerationPatterns {
         List<ObjectEntity> objectEntityList = new ArrayList<>();
         List<CharacterEntity> characterEntityList = new ArrayList<>();
         Random random = new Random();
+        int whereSnowball = random.nextInt(6);
         for (int i = 0; i < 4; i++) {
             int newPlatformY = startPlatformY - 400 - random.nextInt(200);
             int newPlatformX = random.nextInt(spawnWidth - (3 * PresentEntity.DEFAULT_TEXTURE_WIDTH + 3 * 10));
@@ -68,6 +69,9 @@ public class GenerationPatterns {
                 }
             }
             startPlatformY = newPlatformY;
+            if (whereSnowball == i) {
+                characterEntityList.add(new SnowballEntity(random.nextInt(spawnWidth), newPlatformY - 200));
+            }
         }
         int newPlatformY = startPlatformY - 300 - random.nextInt(1);
         int newPlatformX = random.nextInt(spawnWidth - PlatformEntity.getTextureWidth(1));
