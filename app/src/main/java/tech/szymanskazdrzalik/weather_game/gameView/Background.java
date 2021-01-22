@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 
 import tech.szymanskazdrzalik.weather_game.R;
-import tech.szymanskazdrzalik.weather_game.game.entities.TexturedGameEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.TexturedGameEntity;
 
 public class Background extends TexturedGameEntity {
 

@@ -1,19 +1,20 @@
 package tech.szymanskazdrzalik.weather_game.game;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import tech.szymanskazdrzalik.weather_game.game.entities.CharacterEntity;
-import tech.szymanskazdrzalik.weather_game.game.entities.GameEntity;
-import tech.szymanskazdrzalik.weather_game.game.entities.HostileEntity;
-import tech.szymanskazdrzalik.weather_game.game.entities.ObjectEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.CharacterEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.GameEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.HostileEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.ObjectEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PlayerEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PresentEntity;
-import tech.szymanskazdrzalik.weather_game.game.entities.TexturedGameEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.TexturedGameEntity;
 import tech.szymanskazdrzalik.weather_game.gameView.CollisionEventListener;
-import tech.szymanskazdrzalik.weather_game.gameView.GameOverException;
 
 // TODO: 09.01.2021 Good name?
 public class GameEntities {
@@ -46,7 +47,7 @@ public class GameEntities {
         return Optional.empty();
     }
 
-    public boolean detectCollisionWithObjects(PlayerEntity entityToCheck, Iterable<ObjectEntity> entitiesToCollide) {
+    public boolean detectCollisionWithObjects(PlayerEntity entityToCheck, @NotNull Iterable<ObjectEntity> entitiesToCollide) {
         for (ObjectEntity o : entitiesToCollide) {
             PlayerEntity playerEntityAfterMove = new PlayerEntity(entityToCheck);
             playerEntityAfterMove.changeYPos(entityToCheck.getYSpeed());
@@ -57,7 +58,7 @@ public class GameEntities {
         return false;
     }
 
-    public boolean detectCollisionWithCharacters(PlayerEntity entityToCheck, Iterable<CharacterEntity> entitiesToCollide) throws GameOverException {
+    public boolean detectCollisionWithCharacters(PlayerEntity entityToCheck, @NotNull Iterable<CharacterEntity> entitiesToCollide) {
         for (CharacterEntity o : entitiesToCollide) {
             PlayerEntity playerEntityAfterMove = new PlayerEntity(entityToCheck);
             playerEntityAfterMove.changeYPos(entityToCheck.getYSpeed());

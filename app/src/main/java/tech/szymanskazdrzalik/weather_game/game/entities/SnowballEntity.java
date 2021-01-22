@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tech.szymanskazdrzalik.weather_game.R;
+import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.HostileEntity;
 
 public class SnowballEntity extends HostileEntity {
 

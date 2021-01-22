@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 
 import tech.szymanskazdrzalik.weather_game.R;
+import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.ObjectEntity;
 
 public class PlatformEntity extends ObjectEntity {
 

@@ -2,6 +2,7 @@ package tech.szymanskazdrzalik.weather_game;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
@@ -43,9 +44,19 @@ public class GameActivity extends AppCompatActivity {
         super.onResume();
         binding.gameView.resume();
         binding.gameView.setGameOverListener(() -> {
-            Intent intent = new Intent(GameActivity.this, MainActivity.class);
-            startActivity(intent);
+            // TODO: 22.01.2021 Zrobic to inacsej
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    GameActivity.this.recreate();
+                }
+            });
         });
-        binding.gameView.setScoreListener(() -> runOnUiThread(() -> binding.textViewScore.setText("Score = " + (int) (binding.gameView.getScore()))));
+        binding.gameView.setScoreListener(() -> runOnUiThread(() -> binding.textViewScore.setText(String.format("Score = %d", (int) (binding.gameView.getScore())))));
+    }
+
+    public void onStartGameButtonOnClick(View v) {
+        binding.gameView.startGame();
+        binding.startGameButton.setVisibility(View.INVISIBLE);
     }
 }

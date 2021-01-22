@@ -1,4 +1,4 @@
-package tech.szymanskazdrzalik.weather_game.game.entities;
+package tech.szymanskazdrzalik.weather_game.game.entities.parent_entities;
 
 import android.graphics.Point;
 

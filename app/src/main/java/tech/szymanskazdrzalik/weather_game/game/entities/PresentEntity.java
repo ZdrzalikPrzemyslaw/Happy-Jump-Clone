@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 import tech.szymanskazdrzalik.weather_game.R;
+import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.FriendlyEntity;
 
 public class PresentEntity extends FriendlyEntity {
 

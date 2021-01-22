@@ -1,12 +1,10 @@
 package tech.szymanskazdrzalik.weather_game.game.entities;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Point;
 
-import java.util.List;
-
 import tech.szymanskazdrzalik.weather_game.R;
+import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.CharacterEntity;
 
 public class PlayerEntity extends CharacterEntity {
     private final static int defaultResource = R.drawable.santa_idle;

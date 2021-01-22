@@ -9,18 +9,17 @@ import android.view.SurfaceView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import tech.szymanskazdrzalik.weather_game.GameActivity;
 import tech.szymanskazdrzalik.weather_game.game.GameEntities;
-import tech.szymanskazdrzalik.weather_game.game.entities.CharacterEntity;
-import tech.szymanskazdrzalik.weather_game.game.entities.ObjectEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PlatformEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PlayerEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.PresentEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.SnowballEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.StartingPlatformEntity;
-import tech.szymanskazdrzalik.weather_game.game.entities.TexturedGameEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.CharacterEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.TexturedGameEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.util.GenerationPatterns;
 import tech.szymanskazdrzalik.weather_game.sensors.OrientationSensorsService;
 
 public class GameView extends SurfaceView implements Runnable {
@@ -79,6 +78,7 @@ public class GameView extends SurfaceView implements Runnable {
     private OrientationSensorsService orientationSensorsService;
     private Thread thread;
     private GameActivity.GameOverListener gameOverListener;
+    private boolean hasLoaded = false;
 
     public GameView(Context context) {
         super(context);
@@ -143,8 +143,10 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void movePlayer() throws GameOverException {
         this.movePlayerXAxis();
-        this.moveAllEntitiesYAxis();
-        this.gameEntities.getPlayerEntity().changeSpeedAfterGameTick();
+        if (this.isPlaying) {
+            this.moveAllEntitiesYAxis();
+            this.gameEntities.getPlayerEntity().changeSpeedAfterGameTick();
+        }
     }
 
     private void moveAllEntitiesYAxis() throws GameOverException {
@@ -200,13 +202,15 @@ public class GameView extends SurfaceView implements Runnable {
         this.gameEvents.runGameEvents();
     }
 
-    private void checkCollisions() throws GameOverException {
-        if (this.gameEntities.detectCollisionWithObjects(this.gameEntities.getPlayerEntity(),
-                this.gameEntities.getObjectGameEntitiesWithYCoordinatesHigherThanParam(
-                        (int) (this.gameEntities.getPlayerEntity().getYPos() + this.gameEntities.getPlayerEntity().getTexture().getHeight()) - 100))) {
-            this.gameEvents.addGameEvent(() -> GameView.this.gameEntities.getPlayerEntity().setYSpeedAfterPlatformCollision());
+    private void checkCollisions() {
+        if (this.isPlaying) {
+            if (this.gameEntities.detectCollisionWithObjects(this.gameEntities.getPlayerEntity(),
+                    this.gameEntities.getObjectGameEntitiesWithYCoordinatesHigherThanParam(
+                            (int) (this.gameEntities.getPlayerEntity().getYPos() + this.gameEntities.getPlayerEntity().getTexture().getHeight()) - 100))) {
+                this.gameEvents.addGameEvent(() -> GameView.this.gameEntities.getPlayerEntity().setYSpeedAfterPlatformCollision());
+            }
+            this.gameEntities.detectCollisionWithCharacters(this.gameEntities.getPlayerEntity(), this.gameEntities.getCharacterEntities());
         }
-        this.gameEntities.detectCollisionWithCharacters(this.gameEntities.getPlayerEntity(), this.gameEntities.getCharacterEntities());
     }
 
     private void update() throws GameOverException {
@@ -225,18 +229,12 @@ public class GameView extends SurfaceView implements Runnable {
             }
         }
 
-        Random random = new Random();
-
-        List<ObjectEntity> objectEntityList = new ArrayList<>();
-
-        while (highestPlatformY > -this.background.getTexture().getHeight()) {
-            int newPlatformY = highestPlatformY - 300 - random.nextInt(1);
-            int newPlatformX = random.nextInt(this.background.getTexture().getWidth() - 400);
-            objectEntityList.add(new PlatformEntity(newPlatformX, newPlatformY, 1));
-            highestPlatformY = newPlatformY;
+        if (highestPlatformY < -600) {
+            return;
         }
 
-        this.gameEntities.addObjectEntities(objectEntityList);
+
+        this.gameEntities.addObjectEntities(GenerationPatterns.getDefaultPlatformPattern(this.background.getTexture().getWidth(), highestPlatformY).first);
     }
 
     private void increaseTickCount() {
@@ -344,26 +342,29 @@ public class GameView extends SurfaceView implements Runnable {
         PlatformEntity.init(getResources());
         SnowballEntity.init(getResources());
         PresentEntity.init(getResources());
-        this.gameEntities = new GameEntities(new PlayerEntity(w / 2, (int) (h - PlayerEntity.defaultTextureHeight - PlatformEntity.getTextureHeight() - 50), getResources()));
+        StartingPlatformEntity startingPlatformEntity = new StartingPlatformEntity(h);
+        this.gameEntities = new GameEntities(new PlayerEntity(w / 2, (int) (startingPlatformEntity.getYPos() - PlayerEntity.defaultTextureHeight), getResources()));
+        this.gameEntities.addEntity(startingPlatformEntity);
         this.gameEntities.setCollisionEventListener(this.collisionEventListener);
         this.gameEntities.addEntity(new SnowballEntity(200, 400));
         this.gameEntities.addEntity(new PresentEntity(400, 600));
-        // TODO: 11.01.2021 Ultra krzywe, co jeśli 20 platform nie wypełni ekranu xD
-        this.gameEntities.addEntity(new StartingPlatformEntity(h));
         this.generatePlatforms();
-        this.isPlaying = true;
-
+        this.hasLoaded = true;
     }
 
     public void setGameOverListener(GameActivity.GameOverListener gameOverListener) {
         this.gameOverListener = gameOverListener;
     }
 
+    public void startGame() {
+        this.isPlaying = true;
+    }
+
     @Override
     public void run() {
         while (true) {
             try {
-                if (isPlaying) {
+                if (this.hasLoaded) {
                     this.update();
                     this.draw();
                     this.sleep(60);
