@@ -14,30 +14,25 @@ import tech.szymanskazdrzalik.weather_game.gameView.GameOverException;
 
 public class PlayerEntity extends CharacterEntity {
     public final static int defaultTextureHeight = 579 * 4 / 7;
-    public static final double ySpeedChange = 0.5;
-    private final static int defaultResource = R.drawable.santa_idle;
     private final static int defaultTextureWidth = 421 * 4 / 7;
+    private static final double ySpeedChange = 0.5;
     private static List<List<Bitmap>> textureTypesList;
     private static List<Bitmap> runningTextureList;
     private static List<Bitmap> deadTextureList;
     private double ySpeed = 0;
     private int currentTexture = 0;
-
-    public boolean isHasDied() {
-        return hasDied;
-    }
-
     private TextureType currentTextureType = TextureType.Running;
     private EntityDirections directions = EntityDirections.RIGHT;
     private boolean hasDied = false;
-
-
     public PlayerEntity(PlayerEntity playerEntity) {
         super((int) playerEntity.getXPos(), (int) playerEntity.getYPos(), defaultTextureWidth, defaultTextureHeight, runningTextureList.get(0));
     }
-
     public PlayerEntity(int xPos, int yPos) {
         super(xPos, yPos, defaultTextureWidth, defaultTextureHeight, runningTextureList.get(0));
+    }
+
+    public static double getySpeedChange() {
+        return ySpeedChange;
     }
 
     public static void init(Resources resources) {
@@ -108,25 +103,25 @@ public class PlayerEntity extends CharacterEntity {
 
     private static void addDeadBitmaps(Resources resources) {
         deadTextureList = new ArrayList<>();
-        textureTypesList.add(TextureType.Dead.textureType, runningTextureList);
+        textureTypesList.add(TextureType.Dead.textureType, deadTextureList);
         Bitmap bitmap1 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
                 resources, R.drawable.santa_dead_1)), defaultTextureWidth, defaultTextureHeight, false));
         Bitmap bitmap2 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                resources, R.drawable.santa_dead_1)), defaultTextureWidth, defaultTextureHeight, false));
+                resources, R.drawable.santa_dead_2)), defaultTextureWidth, defaultTextureHeight, false));
         Bitmap bitmap3 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                resources, R.drawable.santa_dead_1)), defaultTextureWidth, defaultTextureHeight, false));
+                resources, R.drawable.santa_dead_3)), defaultTextureWidth, defaultTextureHeight, false));
         Bitmap bitmap4 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                resources, R.drawable.santa_dead_1)), defaultTextureWidth, defaultTextureHeight, false));
+                resources, R.drawable.santa_dead_4)), defaultTextureWidth, defaultTextureHeight, false));
         Bitmap bitmap5 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                resources, R.drawable.santa_dead_1)), defaultTextureWidth, defaultTextureHeight, false));
+                resources, R.drawable.santa_dead_5)), defaultTextureWidth, defaultTextureHeight, false));
         Bitmap bitmap6 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                resources, R.drawable.santa_dead_1)), defaultTextureWidth, defaultTextureHeight, false));
+                resources, R.drawable.santa_dead_6)), defaultTextureWidth, defaultTextureHeight, false));
         Bitmap bitmap7 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                resources, R.drawable.santa_dead_1)), defaultTextureWidth, defaultTextureHeight, false));
+                resources, R.drawable.santa_dead_7)), defaultTextureWidth, defaultTextureHeight, false));
         Bitmap bitmap8 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                resources, R.drawable.santa_dead_1)), defaultTextureWidth, defaultTextureHeight, false));
+                resources, R.drawable.santa_dead_8)), defaultTextureWidth, defaultTextureHeight, false));
         Bitmap bitmap9 = (Bitmap.createScaledBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(
-                resources, R.drawable.santa_dead_1)), defaultTextureWidth, defaultTextureHeight, false));
+                resources, R.drawable.santa_dead_9)), defaultTextureWidth, defaultTextureHeight, false));
         for (int i = 0; i < 4; i++) {
             deadTextureList.add(bitmap1);
         }
@@ -154,6 +149,10 @@ public class PlayerEntity extends CharacterEntity {
         for (int i = 0; i < 4; i++) {
             deadTextureList.add(bitmap9);
         }
+    }
+
+    public boolean isHasDied() {
+        return hasDied;
     }
 
     public void setYSpeedAfterPlatformCollision() {
