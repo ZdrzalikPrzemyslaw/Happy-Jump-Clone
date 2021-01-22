@@ -13,8 +13,8 @@ import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.Hostile
 
 public class SnowballEntity extends HostileEntity {
 
-    private final static int DEFAULT_TEXTURE_WIDTH = 256;
-    private final static int DEFAULT_TEXTURE_HEIGHT = 193;
+    public final static int DEFAULT_TEXTURE_WIDTH = 256;
+    public final static int DEFAULT_TEXTURE_HEIGHT = 193;
     private static List<Bitmap> bitmapList;
     private final double xSpeed = 10;
     private int currentTexture = 0;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
@@ -18,6 +19,7 @@ import tech.szymanskazdrzalik.weather_game.game.entities.PresentEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.SnowballEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.StartingPlatformEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.CharacterEntity;
+import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.ObjectEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.TexturedGameEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.util.GenerationPatterns;
 import tech.szymanskazdrzalik.weather_game.sensors.OrientationSensorsService;
@@ -204,9 +206,10 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void checkCollisions() {
         if (this.isPlaying) {
-            if (this.gameEntities.detectCollisionWithObjects(this.gameEntities.getPlayerEntity(),
+            if (this.gameEntities.detectCollisionWithObjects(
+                    this.gameEntities.getPlayerEntity(),
                     this.gameEntities.getObjectGameEntitiesWithYCoordinatesHigherThanParam(
-                            (int) (this.gameEntities.getPlayerEntity().getYPos() + this.gameEntities.getPlayerEntity().getTexture().getHeight()) - 100))) {
+                            (int) (this.gameEntities.getPlayerEntity().getYPos())))) {
                 this.gameEvents.addGameEvent(() -> GameView.this.gameEntities.getPlayerEntity().setYSpeedAfterPlatformCollision());
             }
             this.gameEntities.detectCollisionWithCharacters(this.gameEntities.getPlayerEntity(), this.gameEntities.getCharacterEntities());
@@ -215,6 +218,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update() throws GameOverException {
         callEveryTick();
+        callEvery10Ticks();
         callEvery30Ticks();
         callEvery60Ticks();
         increaseTickCount();
@@ -222,19 +226,25 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void generatePlatforms() {
-        int highestPlatformY = this.background.getTexture().getHeight();
-        for (TexturedGameEntity i : this.gameEntities.getObjectGameEntities()) {
-            if (i.getYPos() < highestPlatformY) {
-                highestPlatformY = (int) i.getYPos();
-            }
-        }
+        int highestPlatformY = this.generatePlatformsCheckHeight();
 
         if (highestPlatformY < -600) {
             return;
         }
+        Pair<Iterable<ObjectEntity>, Iterable<CharacterEntity>> pair = GenerationPatterns.getRandomPattern(this.background.getTexture().getWidth(), highestPlatformY);
+        this.gameEntities.addObjectEntities(pair.first);
+        this.gameEntities.addCharacterEntities(pair.second);
+    }
 
+    private int generatePlatformsCheckHeight() {
+        return (int) this.gameEntities.getHighestObject().getYPos();
+    }
 
-        this.gameEntities.addObjectEntities(GenerationPatterns.getDefaultPlatformPattern(this.background.getTexture().getWidth(), highestPlatformY).first);
+    private void generateInitialPlatforms() {
+        int highestPlatformY = this.generatePlatformsCheckHeight();
+        Pair<Iterable<ObjectEntity>, Iterable<CharacterEntity>> pair = GenerationPatterns.getDefaultPlatformPattern(this.background.getTexture().getWidth(), highestPlatformY);
+        this.gameEntities.addObjectEntities(pair.first);
+        this.gameEntities.addCharacterEntities(pair.second);
     }
 
     private void increaseTickCount() {
@@ -242,20 +252,25 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void resetTickCount() {
-        if (tick % 120 == 0 && tick != 0) {
+        if (tick % 60 == 0 && tick != 0) {
             tick = 0;
         }
     }
 
-    private void callEvery60Ticks() {
-        if (tick % 60 == 0 && tick != 0) {
-            this.checkIfEntitiesAreOnScreenYAxis();
+    private void callEvery10Ticks() {
+        if (tick % 10 == 0) {
             this.generatePlatforms();
         }
     }
 
+    private void callEvery60Ticks() {
+        if (tick % 60 == 0) {
+            this.checkIfEntitiesAreOnScreenYAxis();
+        }
+    }
+
     private void callEvery30Ticks() throws GameOverException {
-        if (tick % 30 == 0 && tick != 0) {
+        if (tick % 30 == 0) {
             this.checkGameOverConditions();
         }
     }
@@ -346,9 +361,7 @@ public class GameView extends SurfaceView implements Runnable {
         this.gameEntities = new GameEntities(new PlayerEntity(w / 2, (int) (startingPlatformEntity.getYPos() - PlayerEntity.defaultTextureHeight), getResources()));
         this.gameEntities.addEntity(startingPlatformEntity);
         this.gameEntities.setCollisionEventListener(this.collisionEventListener);
-        this.gameEntities.addEntity(new SnowballEntity(200, 400));
-        this.gameEntities.addEntity(new PresentEntity(400, 600));
-        this.generatePlatforms();
+        this.generateInitialPlatforms();
         this.hasLoaded = true;
     }
 

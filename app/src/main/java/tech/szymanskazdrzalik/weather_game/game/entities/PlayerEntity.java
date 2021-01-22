@@ -36,7 +36,9 @@ public class PlayerEntity extends CharacterEntity {
         return ySpeed;
     }
 
+    public static final double ySpeedChange = 0.5;
+
     public void changeSpeedAfterGameTick() {
-        this.ySpeed += 0.5;
+        this.ySpeed += ySpeedChange;
     }
 }

@@ -1,6 +1,7 @@
 package tech.szymanskazdrzalik.weather_game.game;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +24,8 @@ public class GameEntities {
     private final List<ObjectEntity> objectGameEntities = new ArrayList<>();
     private PlayerEntity playerEntity;
     private CollisionEventListener collisionEventListener;
+
+    private ObjectEntity highestObject = null;
 
     public void setCollisionEventListener(CollisionEventListener collisionEventListener) {
         this.collisionEventListener = collisionEventListener;
@@ -50,8 +53,10 @@ public class GameEntities {
     public boolean detectCollisionWithObjects(PlayerEntity entityToCheck, @NotNull Iterable<ObjectEntity> entitiesToCollide) {
         for (ObjectEntity o : entitiesToCollide) {
             PlayerEntity playerEntityAfterMove = new PlayerEntity(entityToCheck);
-            playerEntityAfterMove.changeYPos(entityToCheck.getYSpeed());
-            if (!checkCollision(entityToCheck, o) && checkCollision(playerEntityAfterMove, o) && entityToCheck.getYSpeed() > 0) {
+            playerEntityAfterMove.changeYPos(entityToCheck.getYSpeed() + PlayerEntity.ySpeedChange);
+            boolean b = !checkCollision(entityToCheck, o);
+            boolean b2 = checkCollision(playerEntityAfterMove, o);
+            if (b && b2 && entityToCheck.getYSpeed() > 0) {
                 return true;
             }
         }
@@ -105,6 +110,9 @@ public class GameEntities {
     }
 
     public void addEntity(ObjectEntity entity) {
+        if (this.highestObject == null || entity.getYPos() < this.highestObject.getYPos()) {
+            this.highestObject = entity;
+        }
         objectGameEntities.add(entity);
     }
 
@@ -118,6 +126,11 @@ public class GameEntities {
         for (ObjectEntity o : entities) {
             addEntity(o);
         }
+    }
+
+    @Nullable
+    public ObjectEntity getHighestObject() {
+        return this.highestObject;
     }
 
     public List<CharacterEntity> getCharacterEntities() {
