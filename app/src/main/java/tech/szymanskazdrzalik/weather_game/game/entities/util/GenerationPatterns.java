@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import tech.szymanskazdrzalik.weather_game.game.entities.HostileEntityDirections;
+import tech.szymanskazdrzalik.weather_game.game.entities.EntityDirections;
 import tech.szymanskazdrzalik.weather_game.game.entities.PlatformEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.SnowballEntity;
 import tech.szymanskazdrzalik.weather_game.game.entities.parent_entities.CharacterEntity;
@@ -42,7 +42,7 @@ public class GenerationPatterns {
                         new SnowballEntity(
                                 random.nextInt(spawnWidth - SnowballEntity.DEFAULT_TEXTURE_WIDTH),
                                 newPlatformY - SnowballEntity.DEFAULT_TEXTURE_HEIGHT - 10,
-                                random.nextBoolean() ? HostileEntityDirections.LEFT : HostileEntityDirections.RIGHT));
+                                random.nextBoolean() ? EntityDirections.LEFT : EntityDirections.RIGHT));
             }
         }
 

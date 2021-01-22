@@ -18,13 +18,13 @@ public class SnowballEntity extends HostileEntity {
     private static List<Bitmap> bitmapList;
     private final double xSpeed = 10;
     private int currentTexture = 0;
-    private HostileEntityDirections directions = HostileEntityDirections.LEFT;
+    private EntityDirections directions = EntityDirections.LEFT;
 
     public SnowballEntity(int xPos, int yPos) {
         super(xPos, yPos, DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, bitmapList.get(0));
     }
 
-    public SnowballEntity(int xPos, int yPos, HostileEntityDirections directions) {
+    public SnowballEntity(int xPos, int yPos, EntityDirections directions) {
         super(xPos, yPos, DEFAULT_TEXTURE_WIDTH, DEFAULT_TEXTURE_HEIGHT, bitmapList.get(0));
         this.directions = directions;
     }
@@ -69,17 +69,17 @@ public class SnowballEntity extends HostileEntity {
         this.changeTexture();
     }
 
-    public HostileEntityDirections getDirections() {
+    public EntityDirections getDirections() {
         return directions;
     }
 
-    public void setDirections(HostileEntityDirections directions) {
+    public void setDirections(EntityDirections directions) {
         this.directions = directions;
     }
 
     private void changeTexture() {
         Bitmap currentBitmap = bitmapList.get(this.currentTexture);
-        if (this.directions == HostileEntityDirections.RIGHT) {
+        if (this.directions == EntityDirections.RIGHT) {
             Matrix matrix = new Matrix();
             matrix.postRotate(180);
             this.setTexture(Bitmap.createBitmap(currentBitmap, 0, 0, currentBitmap.getWidth(), currentBitmap.getHeight(), matrix, true));
@@ -100,7 +100,7 @@ public class SnowballEntity extends HostileEntity {
 
     @Override
     public double getHitboxStartX() {
-        if (this.directions == HostileEntityDirections.LEFT) {
+        if (this.directions == EntityDirections.LEFT) {
             return this.getXPos() + this.getTexture().getWidth() / 4.f;
         } else {
             return this.getXPos() + this.getTexture().getWidth() * 3 / 4.f;
@@ -124,7 +124,7 @@ public class SnowballEntity extends HostileEntity {
     }
 
     public void changeXPos() {
-        if (this.directions == HostileEntityDirections.LEFT) {
+        if (this.directions == EntityDirections.LEFT) {
             this.changeXPos(-this.xSpeed);
         } else {
             this.changeXPos(this.xSpeed);

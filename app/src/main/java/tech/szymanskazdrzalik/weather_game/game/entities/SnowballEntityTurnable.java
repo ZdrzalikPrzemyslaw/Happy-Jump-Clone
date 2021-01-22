@@ -8,7 +8,7 @@ public class SnowballEntityTurnable extends SnowballEntity {
         super(xPos, yPos);
     }
 
-    public SnowballEntityTurnable(int xPos, int yPos, HostileEntityDirections directions) {
+    public SnowballEntityTurnable(int xPos, int yPos, EntityDirections directions) {
         super(xPos, yPos, directions);
     }
 
@@ -25,7 +25,7 @@ public class SnowballEntityTurnable extends SnowballEntity {
         super.changeXPos(delta);
         this.setMovedAmount(this.getMovedAmount() + delta);
         if (Math.abs(this.getMovedAmount()) >= 200) {
-            HostileEntityDirections directions = this.getDirections() == HostileEntityDirections.LEFT ? HostileEntityDirections.RIGHT : HostileEntityDirections.LEFT;
+            EntityDirections directions = this.getDirections() == EntityDirections.LEFT ? EntityDirections.RIGHT : EntityDirections.LEFT;
             this.setDirections(directions);
         }
     }

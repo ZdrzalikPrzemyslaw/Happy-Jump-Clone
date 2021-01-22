@@ -352,13 +352,8 @@ public class GameView extends SurfaceView implements Runnable {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         background = new Background(w, h, getResources());
-        // TODO: 09.01.2021 Change, testing
-        // TODO: 13.01.2021 INIT w splash screenie zrobic
-        PlatformEntity.init(getResources());
-        SnowballEntity.init(getResources());
-        PresentEntity.init(getResources());
         StartingPlatformEntity startingPlatformEntity = new StartingPlatformEntity(h);
-        this.gameEntities = new GameEntities(new PlayerEntity(w / 2, (int) (startingPlatformEntity.getYPos() - PlayerEntity.defaultTextureHeight), getResources()));
+        this.gameEntities = new GameEntities(new PlayerEntity(w / 2, (int) (startingPlatformEntity.getYPos() - PlayerEntity.defaultTextureHeight)));
         this.gameEntities.addEntity(startingPlatformEntity);
         this.gameEntities.setCollisionEventListener(this.collisionEventListener);
         this.generateInitialPlatforms();

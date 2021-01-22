@@ -1,10 +1,10 @@
 package tech.szymanskazdrzalik.weather_game.game.entities;
 
-public enum HostileEntityDirections {
+public enum EntityDirections {
     LEFT(0),
     RIGHT(1);
 
-    private HostileEntityDirections(int direction) {
+    private EntityDirections(int direction) {
         this.direction = direction;
     }
 
