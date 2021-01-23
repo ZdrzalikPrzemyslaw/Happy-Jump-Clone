@@ -390,6 +390,9 @@ public class GameView extends SurfaceView implements Runnable {
                 }
                 this.draw();
                 this.sleep(60);
+                if (pause) {
+                    break;
+                }
             } catch (GameOverException e) {
                 if (!gameEntities.getPlayerEntity().isHasDied()) {
                     gameEntities.getPlayerEntity().setDeadTexture();
@@ -402,8 +405,11 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+    private boolean pause = false;
+
     public void resume() {
         this.orientationSensorsService.registerListeners();
+        this.pause = false;
         thread = new Thread(this);
         thread.start();
     }
@@ -419,6 +425,7 @@ public class GameView extends SurfaceView implements Runnable {
     public void pause() {
         try {
             this.orientationSensorsService.unregisterListeners();
+            this.pause = true;
             thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();

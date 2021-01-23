@@ -164,6 +164,12 @@ public class PlayerEntity extends CharacterEntity {
     }
 
     private void changeTexture() throws GameOverException {
+        if (this.currentTexture >= textureTypesList.get(this.currentTextureType.textureType).size()) {
+            if (currentTextureType == TextureType.Dead) {
+                throw new GameOverException();
+            }
+            this.currentTexture = 0;
+        }
         Bitmap currentBitmap = textureTypesList.get(this.currentTextureType.textureType).get(this.currentTexture);
         if (this.directions == EntityDirections.LEFT) {
             Matrix matrix = new Matrix();
@@ -173,12 +179,6 @@ public class PlayerEntity extends CharacterEntity {
             this.setTexture(currentBitmap);
         }
         this.currentTexture++;
-        if (this.currentTexture >= textureTypesList.get(this.currentTextureType.textureType).size()) {
-            if (currentTextureType == TextureType.Dead) {
-                throw new GameOverException();
-            }
-            this.currentTexture = 0;
-        }
     }
 
     private void setRunningTexture() {
