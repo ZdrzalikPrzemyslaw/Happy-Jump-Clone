@@ -146,7 +146,7 @@ public class PlayerEntity extends CharacterEntity {
         for (int i = 0; i < 4; i++) {
             deadTextureList.add(bitmap8);
         }
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 28; i++) {
             deadTextureList.add(bitmap9);
         }
     }
