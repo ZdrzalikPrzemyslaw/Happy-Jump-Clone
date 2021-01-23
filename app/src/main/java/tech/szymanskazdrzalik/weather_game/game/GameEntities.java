@@ -53,7 +53,7 @@ public class GameEntities {
     public boolean detectCollisionWithObjects(PlayerEntity entityToCheck, @NotNull Iterable<ObjectEntity> entitiesToCollide) {
         for (ObjectEntity o : entitiesToCollide) {
             PlayerEntity playerEntityAfterMove = new PlayerEntity(entityToCheck);
-            playerEntityAfterMove.changeYPos(entityToCheck.getYSpeed() + PlayerEntity.getySpeedChange());
+            playerEntityAfterMove.changeYPos(entityToCheck.getYSpeed() + PlayerEntity.getySpeedChange() * 3);
             boolean b = !checkCollision(entityToCheck, o);
             boolean b2 = checkCollision(playerEntityAfterMove, o);
             if (b && b2 && entityToCheck.getYSpeed() > 0) {
