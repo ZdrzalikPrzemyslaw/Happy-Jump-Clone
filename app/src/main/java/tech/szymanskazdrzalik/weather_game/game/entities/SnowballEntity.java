@@ -85,6 +85,9 @@ public class SnowballEntity extends HostileEntity {
     }
 
     private void changeTexture() {
+        if (this.currentTexture >= bitmapList.size()) {
+            this.currentTexture = 0;
+        }
         Bitmap currentBitmap = bitmapList.get(this.currentTexture);
         if (this.directions == EntityDirections.RIGHT) {
             Matrix matrix = new Matrix();
@@ -94,9 +97,6 @@ public class SnowballEntity extends HostileEntity {
             this.setTexture(bitmapList.get(this.currentTexture));
         }
         this.currentTexture++;
-        if (this.currentTexture >= bitmapList.size()) {
-            this.currentTexture = 0;
-        }
     }
 
     @Override
